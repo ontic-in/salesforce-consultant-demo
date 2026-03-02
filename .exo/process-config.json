@@ -65,6 +65,13 @@
       "completionCta": "Confirm Requirements",
       "steps": [
         {
+          "id": "upload-transcript",
+          "name": "Upload Call Transcript",
+          "description": "Upload a new call transcript (discovery call, walkthrough recording, follow-up) to feed into the next worksheet pass",
+          "actionType": "upload",
+          "uploadPath": "requirements/call-transcripts/"
+        },
+        {
           "id": "generate-worksheet",
           "name": "Generate/Update Requirements Worksheet",
           "description": "Create or update the worksheet from transcripts and client docs. First pass extracts what it can (with gaps marked). Each subsequent pass merges new information, fills gaps, and upgrades confidence levels.",
