@@ -1,4 +1,9 @@
-# Claude Instructions for Service Cloud Starter Pack Optimization
+# Claude Instructions for Consultant_onboarding_testrun Service Cloud Implementation
+> **Client:** Consultant_onboarding_testrun
+> **Tier:** Enable ($20K, 6-8 weeks)
+> **Initialized:** 2026-03-02
+> **Scope Reference:** `tiers/service-cloud/enable.md`
+
 
 ## Template Repository
 
