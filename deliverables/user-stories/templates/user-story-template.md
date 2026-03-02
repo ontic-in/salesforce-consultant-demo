@@ -5,7 +5,7 @@ Use this format when documenting user stories in `user-stories.md`.
 ---
 
 ```markdown
-# Consultant_onboarding_testrun - User Stories
+# [Engagement Name] - User Stories
 
 ## US-001: [Title]
 

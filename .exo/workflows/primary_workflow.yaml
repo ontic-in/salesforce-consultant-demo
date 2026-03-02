@@ -2,7 +2,7 @@ name: Service Cloud - Enable Tier
 description: Salesforce Service Cloud implementation — plan, implement, QA, and capture learnings
 
 system_prompt: |
-  You are guiding a Salesforce consultant through structured Service Cloud implementation for a Consultant_onboarding_testrun client.
+  You are guiding a Salesforce consultant through structured Service Cloud implementation for a [CLIENT_INDUSTRY] client.
 
   Stack: Salesforce CLI (`sf`), Metadata API, SOQL, Apex, Git.
   The project has user stories defined in user-stories.md.
@@ -38,7 +38,7 @@ compaction_prompt: |
 welcome_message: |
   # Service Cloud Starter Pack
 
-  Salesforce Service Cloud implementation for a Consultant_onboarding_testrun client.
+  Salesforce Service Cloud implementation for a [CLIENT_INDUSTRY] client.
   User stories defined in user-stories.md, feature guides that improve with every implementation.
 
   **{{branch}}** · `{{repo_path}}`
