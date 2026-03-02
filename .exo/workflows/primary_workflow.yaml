@@ -70,41 +70,24 @@ welcome_message: |
   Pick the next user story and run `/salesforce-coe:sp:plan US-XXX` to start planning.
 
 commands:
-  # Local command
   - name: sp:setup
-    type: local
-    source: .claude/commands/sp:setup.md
     label: Project Setup
     description: Initialize project with client name, tier, and existing materials. Installs salesforce-coe plugin.
-
-  # Commands from salesforce-coe grimoire plugin
   - name: salesforce-coe:sp:create-or-update-requirements-worksheet
-    type: plugin
-    source: salesforce-coe
     label: Requirements Worksheet
     description: Generate or update a pre-filled requirements worksheet from discovery transcripts, SOWs, and client documents
   - name: salesforce-coe:sp:create-user-stories
-    type: plugin
-    source: salesforce-coe
     label: Create User Stories
     description: Generate sequenced user stories from a finalized requirements worksheet
   - name: salesforce-coe:sp:plan
-    type: plugin
-    source: salesforce-coe
     label: Plan
     description: Authenticate to org, query current state, map to feature guides, generate grounded implementation plan
   - name: salesforce-coe:sp:implement
-    type: plugin
-    source: salesforce-coe
     label: Implement
     description: Execute approved plan via CLI deployments, verify each step, capture deviations as learnings
   - name: salesforce-coe:sp:qa
-    type: plugin
-    source: salesforce-coe
     label: QA Validate
     description: Run test cases from plan, capture evidence with actual query results, validate acceptance criteria
   - name: salesforce-coe:sp:feedback
-    type: plugin
-    source: salesforce-coe
     label: Capture Feedback
     description: Context-aware learning capture — maps feedback to feature guides with proper attribution

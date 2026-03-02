@@ -94,8 +94,7 @@
           "name": "Upload Call Transcript",
           "description": "Upload a new call transcript (discovery call, walkthrough recording, follow-up) to feed into the next worksheet pass",
           "actionType": "upload",
-          "uploadPath": "requirements/call-transcripts/",
-          "optional": true
+          "uploadPath": "requirements/call-transcripts/"
         }
       ]
     },
@@ -131,25 +130,11 @@
           "id": "plan-implement-qa-loop",
           "name": "Plan → Implement → QA Each Story",
           "description": "For each user story: plan (grounded in org state), implement (via CLI), and QA (with SOQL evidence). Use /salesforce-coe:sp:feedback to capture learnings when things deviate.",
-          "actionType": "forEach",
+          "actionType": "forEachFile",
           "scanPath": "deliverables/user-stories/",
-          "subSteps": [
-            {
-              "id": "plan",
-              "name": "Plan",
-              "command": "/salesforce-coe:sp:plan"
-            },
-            {
-              "id": "implement",
-              "name": "Implement",
-              "command": "/salesforce-coe:sp:implement"
-            },
-            {
-              "id": "qa",
-              "name": "QA",
-              "command": "/salesforce-coe:sp:qa"
-            }
-          ]
+          "command": "Read the attached user story file. Authenticate to the scratch org, query current state for relevant objects and config, then generate a grounded implementation plan with CLI commands and QA test cases. Present the plan for approval before proceeding.",
+          "workflow": "story-execution",
+          "outputs": ["deliverables/"]
         }
       ]
     }

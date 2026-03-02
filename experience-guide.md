@@ -24,7 +24,7 @@ Before the consultant arrives, ensure:
 **Environment:**
 - [ ] Fresh scratch org spun up and authenticated (`sf org login`)
 - [ ] Repo cloned, Claude Code installed and working
-- [ ] Slash commands functional (`/sf:plan`, `/sf:implement`, `/sf:qa`, `/sf:feedback`)
+- [ ] Slash commands functional (`/salesforce-coe:sp:plan`, `/salesforce-coe:sp:implement`, `/salesforce-coe:sp:qa`, `/salesforce-coe:sp:feedback`)
 - [ ] Consultant has terminal access (their machine or shared screen)
 
 **Materials:**
@@ -49,7 +49,7 @@ The consultant's first interaction with the system. They produce a requirements 
 
 **What they do:**
 1. Open the sales handoff transcript (`onboarding/sales-transcript.md`)
-2. Run `/sp:create-or-update-requirements-worksheet` pointed at the sales transcript
+2. Run `/salesforce-coe:sp:create-or-update-requirements-worksheet` pointed at the sales transcript
 3. Review the generated worksheet — notice the gaps, AI guesses, and `❓ Needs Discussion` items
 4. Don't fix anything yet — just observe what the system knows and doesn't know
 
@@ -69,7 +69,7 @@ The consultant's first interaction with the system. They produce a requirements 
 
 **What they do:**
 1. Open the discovery transcript (`onboarding/discovery-transcript.md`)
-2. Run `/sp:create-or-update-requirements-worksheet` again — pointed at the discovery transcript, against the existing worksheet
+2. Run `/salesforce-coe:sp:create-or-update-requirements-worksheet` again — pointed at the discovery transcript, against the existing worksheet
 3. Review the updated worksheet — watch gaps fill in, confidence levels upgrade, and `❓ Needs Discussion` items resolve
 4. Make any final corrections or clarifications
 
@@ -93,7 +93,7 @@ The consultant's first interaction with the system. They produce a requirements 
 Now they take the validated worksheet and break it into sequenced, implementation-ready user stories.
 
 **What they do:**
-1. Run `/sp:create-user-stories` against the requirements worksheet
+1. Run `/salesforce-coe:sp:create-user-stories` against the requirements worksheet
 2. Review the generated stories — acceptance criteria, sequencing, dependencies
 3. Approve, reorder, or modify stories interactively
 4. Confirm the final story set
@@ -125,19 +125,19 @@ The first full cycle. This story covers users, roles, profiles, OWD, and sharing
 **What they do:**
 
 *Plan:*
-1. Run `/sf:plan` for the admin story
+1. Run `/salesforce-coe:sp:plan` for the admin story
 2. System authenticates to org, queries current state (existing users, roles, profiles)
 3. Review the generated plan — CLI commands, metadata changes, verification queries
 4. Approve or adjust the plan
 
 *Implement:*
-1. Run `/sf:implement` for the same story
+1. Run `/salesforce-coe:sp:implement` for the same story
 2. Watch the system execute the plan step by step
 3. See real-time verification queries confirming each step worked
 4. If something deviates from the plan, the learning loop activates — they see it capture the deviation
 
 *QA:*
-1. Run `/sf:qa` for the story
+1. Run `/salesforce-coe:sp:qa` for the story
 2. System runs acceptance criteria checks against the live org
 3. Review pass/fail results with SOQL evidence
 4. Open the Salesforce org in a browser — see the users, roles, and hierarchy visually
@@ -151,7 +151,7 @@ The first full cycle. This story covers users, roles, profiles, OWD, and sharing
 **Facilitator notes:**
 - This is the longest story but also the most foundational. Don't rush it.
 - The consultant may want to adjust the plan (different role names, different profile assignments). Encourage this — it's how the system is designed to work.
-- If OWD or sharing rules behave unexpectedly, use `/sf:feedback` to capture the learning. This demonstrates the feedback loop naturally.
+- If OWD or sharing rules behave unexpectedly, use `/salesforce-coe:sp:feedback` to capture the learning. This demonstrates the feedback loop naturally.
 - After QA, pull up the Salesforce org and show the role hierarchy visually. The "it actually works" moment lands harder when they can see it in the UI.
 
 ---
@@ -169,16 +169,16 @@ Shorter story, but compound impact — the fields they create here become inputs
 **What they do:**
 
 *Plan:*
-1. Run `/sf:plan` — system sees the users and roles from Story 1 already in the org
+1. Run `/salesforce-coe:sp:plan` — system sees the users and roles from Story 1 already in the org
 2. Plan references field metadata, validation rule XML, and page layout assignments
 
 *Implement:*
-1. Run `/sf:implement` — fields deployed via metadata API
+1. Run `/salesforce-coe:sp:implement` — fields deployed via metadata API
 2. Validation rule deployed and tested
 3. Page layout updated to include new fields
 
 *QA:*
-1. Run `/sf:qa` — verify fields exist, picklist values are correct, validation rule fires
+1. Run `/salesforce-coe:sp:qa` — verify fields exist, picklist values are correct, validation rule fires
 2. Try creating a case without a product — see it fail (validation rule working)
 3. Confirm fields appear on the page layout
 
@@ -192,7 +192,7 @@ Shorter story, but compound impact — the fields they create here become inputs
 - This is where the consultant starts to feel the rhythm: plan → implement → QA is becoming familiar.
 - Point out that the system's plan references the actual org state — it doesn't re-propose creating users or roles. It knows what's already done.
 - If the field API names come out differently than expected (e.g., `Product_Name__c` vs `Product__c`), that's a learning capture moment.
-- The validation rule is a good test of guide quality. If the guide handles it cleanly, great. If not, the consultant captures the gap via `/sf:feedback`.
+- The validation rule is a good test of guide quality. If the guide handles it cleanly, great. If not, the consultant captures the gap via `/salesforce-coe:sp:feedback`.
 
 ---
 
@@ -221,19 +221,19 @@ The showpiece. A Record-Triggered Flow that demonstrates why this isn't just a d
 **What they do:**
 
 *Plan:*
-1. Run `/sf:plan` — this is the most complex plan in the session
+1. Run `/salesforce-coe:sp:plan` — this is the most complex plan in the session
 2. System maps flow logic to metadata structure
 3. Plan should outline: trigger configuration, Get Records elements, Decision elements, Assignment elements, Create Records elements
 4. Consultant reviews for correctness — does the logic match what Lisa described?
 
 *Implement:*
-1. Run `/sf:implement` — flow metadata deployed
+1. Run `/salesforce-coe:sp:implement` — flow metadata deployed
 2. This is where things get interesting. Flow XML is complex, cross-object lookups need the right relationship paths, and the queue from Story 1 must be referenced correctly
 3. If deployment fails or flow has errors, the system captures what went wrong and adjusts
 4. Verification queries confirm flow is active and elements are correctly configured
 
 *QA:*
-1. Run `/sf:qa` — test scenarios against the live org
+1. Run `/salesforce-coe:sp:qa` — test scenarios against the live org
 2. Test case 1: Gold customer with 2+ open cases → should route to senior queue, priority Critical
 3. Test case 2: New account (< 30 days) → should set priority High
 4. Test case 3: Silver customer, established account → should stay normal priority
@@ -248,7 +248,7 @@ The showpiece. A Record-Triggered Flow that demonstrates why this isn't just a d
 
 **Facilitator notes:**
 - This is the story most likely to hit guide gaps or unexpected behavior. That's by design.
-- If the flow fails to deploy or activate, don't panic. Walk through the error together, use `/sf:feedback` to capture the learning. The consultant seeing the system handle failure gracefully is more impressive than a perfect run.
+- If the flow fails to deploy or activate, don't panic. Walk through the error together, use `/salesforce-coe:sp:feedback` to capture the learning. The consultant seeing the system handle failure gracefully is more impressive than a perfect run.
 - If time is running short, the Chatter post action can be deferred. VIP detection + task creation is the must-have.
 - After QA, show the flow in Flow Builder visually. Let the consultant see that a complex, multi-path flow was built and deployed without touching the UI.
 - This is also where the consultant usually "gets it" — they see how transcript → requirements → stories → working automation is a real pipeline, not a demo.
@@ -271,8 +271,8 @@ By end of session, the consultant has:
 - Any learnings captured in feature guides
 
 **Hands-on experience with:**
-- The full `/sf:plan` → `/sf:implement` → `/sf:qa` lifecycle
-- The `/sf:feedback` learning capture loop
+- The full `/salesforce-coe:sp:plan` → `/salesforce-coe:sp:implement` → `/salesforce-coe:sp:qa` lifecycle
+- The `/salesforce-coe:sp:feedback` learning capture loop
 - How the system queries actual org state and builds on previous work
 - How errors and deviations are handled (not hidden)
 

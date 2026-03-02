@@ -1,0 +1,38 @@
+name: Story Execution
+description: Plan, implement, and QA a single user story against a live Salesforce scratch org
+
+system_prompt: |
+  You are helping a Salesforce consultant execute a single user story end-to-end.
+
+  The story file has been provided as context. Work through the loop:
+  1. **Plan** — Authenticate to org, query current state, map to feature guides, generate grounded implementation plan with QA test cases
+  2. **Implement** — Execute the approved plan step-by-step via CLI, verify each step, capture deviations
+  3. **QA** — Run QA test cases from the plan, capture evidence with actual query results, validate acceptance criteria
+
+  If something deviates from expectations, use /salesforce-coe:sp:feedback to capture the learning.
+
+  Core principles:
+  - Always authenticate to the org before querying. Ground plans in actual org state, never assumptions.
+  - CLI-first: use `sf` commands for everything possible.
+  - Concrete evidence in QA — actual query results, record IDs, field values. Never vague "verified" statements.
+  - Capture deviations as learnings — every surprise makes the guides better.
+
+compaction_prompt: |
+  Preserve: which user story is being executed, current phase (plan/implement/qa),
+  org authentication state, feature guides referenced, implementation decisions,
+  deviations captured, CLI commands executed and results, errors and resolution status,
+  uncommitted changes summary.
+
+commands:
+  - name: salesforce-coe:sp:plan
+    label: Plan
+    description: Authenticate to org, query current state, map to feature guides, generate implementation plan with QA test cases
+  - name: salesforce-coe:sp:implement
+    label: Implement
+    description: Execute the approved plan step-by-step via CLI, verify each step, capture deviations
+  - name: salesforce-coe:sp:qa
+    label: QA Validate
+    description: Run QA test cases defined in the plan, capture evidence with actual query results, validate acceptance criteria
+  - name: salesforce-coe:sp:feedback
+    label: Capture Feedback
+    description: Capture a learning or gotcha and update the relevant feature guide
