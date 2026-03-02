@@ -1,0 +1,8 @@
+# Temporary learnings staging area
+temp/
+
+# Salesforce metadata (deployed to org, not tracked in repo)
+force-app/
+
+# Session state (runtime, not committed)
+store/

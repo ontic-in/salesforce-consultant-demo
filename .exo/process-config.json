@@ -1,0 +1,434 @@
+{
+  "name": "AI-Accelerated Starter Pack",
+  "description": "Structured delivery process for Salesforce Service Cloud implementations",
+  "phases": [
+    {
+      "id": "setup",
+      "name": "Project Setup",
+      "description": "Initialize the project repo with client details and configuration",
+      "blocking": true,
+      "steps": [
+        {
+          "id": "setup",
+          "name": "Initialize Project",
+          "description": "Set up repo with client name, tier, and transcripts",
+          "actionType": "command",
+          "command": "/sp:setup",
+          "outputs": ["README.md", "CLAUDE.md", ".exo/workflows/primary_workflow.yaml"],
+          "inputFields": [
+            {
+              "fieldName": "clientName",
+              "label": "Client Name",
+              "description": "The client's company name",
+              "inputType": "text",
+              "required": true
+            },
+            {
+              "fieldName": "projectName",
+              "label": "Project Name",
+              "description": "Optional project name (defaults to client name)",
+              "inputType": "text",
+              "required": false
+            },
+            {
+              "fieldName": "tier",
+              "label": "Engagement Tier",
+              "description": "Select the starter pack tier",
+              "inputType": "select",
+              "options": ["Enable", "Elevate", "Transform"],
+              "required": true,
+              "default": "Enable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "discovery",
+      "name": "Discovery",
+      "description": "Gather materials and upload transcripts and client documents",
+      "steps": [
+        {
+          "id": "upload-transcripts",
+          "name": "Upload Call Transcripts",
+          "description": "Upload sales handoff call transcripts",
+          "actionType": "upload",
+          "uploadPath": "requirements/call-transcripts/"
+        },
+        {
+          "id": "upload-client-docs",
+          "name": "Upload Client Documents",
+          "description": "Upload SOW, org charts, and other client documents",
+          "actionType": "upload",
+          "uploadPath": "requirements/client-docs/"
+        }
+      ]
+    },
+    {
+      "id": "requirements-worksheet",
+      "name": "Requirements Worksheet",
+      "description": "Generate, review, and iterate the requirements worksheet until customer confirms",
+      "repeatable": true,
+      "completionCta": "Confirm Requirements",
+      "steps": [
+        {
+          "id": "generate-worksheet",
+          "name": "Generate/Update Requirements Worksheet",
+          "description": "Create or update the pre-filled worksheet from transcripts, SOW, and client docs. Each iteration preserves previous versions (v1, v2, vN)",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:create-or-update-requirements-worksheet",
+          "outputs": ["requirements/worksheets/output/*-worksheet-vN.md"],
+          "inputFiles": [
+            {
+              "label": "Call Transcripts",
+              "description": "Select call transcripts to include",
+              "paths": ["requirements/call-transcripts/"]
+            },
+            {
+              "label": "Client Documents",
+              "description": "Select SOW, org charts, and other client docs",
+              "paths": ["requirements/client-docs/"]
+            },
+            {
+              "label": "Existing Worksheets",
+              "description": "Select previous worksheet versions to build upon",
+              "paths": ["requirements/worksheets/output/"]
+            }
+          ]
+        },
+        {
+          "id": "prep-worksheet-walkthrough",
+          "name": "Prepare Walkthrough",
+          "description": "Generate pre-read document with agenda from worksheet unknowns",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:prep-meeting worksheet-walkthrough",
+          "outputs": ["deliverables/meetings/worksheet-walkthrough-preread.md"],
+          "inputFiles": [
+            {
+              "label": "Requirements Worksheet",
+              "description": "Select the requirements worksheet to prepare walkthrough from",
+              "paths": ["requirements/worksheets/output/"],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "worksheet-walkthrough-meeting",
+          "name": "Walkthrough Meeting",
+          "description": "60-90 min meeting with customer to review worksheet and resolve unknowns",
+          "actionType": "manual"
+        },
+        {
+          "id": "upload-walkthrough-transcript",
+          "name": "Upload Walkthrough Transcript",
+          "description": "Upload the walkthrough meeting transcript",
+          "actionType": "upload",
+          "uploadPath": "requirements/call-transcripts/"
+        }
+      ]
+    },
+    {
+      "id": "user-story-implementation",
+      "name": "User Story Implementation",
+      "description": "Create user stories, plan, implement, and QA each story",
+      "steps": [
+        {
+          "id": "create-user-stories",
+          "name": "Create User Stories",
+          "description": "Decompose finalized worksheet into sequenced user stories with dependency map",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:create-user-stories",
+          "outputs": ["deliverables/user-stories/"],
+          "inputFiles": [
+            {
+              "label": "Requirements Worksheet",
+              "description": "Select the finalized requirements worksheet",
+              "paths": ["requirements/worksheets/output/"],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "plan-implement-qa-loop",
+          "name": "Plan, Implement, and QA Each Story",
+          "description": "For each user story: plan, implement, and QA in sequence",
+          "actionType": "forEach",
+          "scanPath": "deliverables/user-stories/",
+          "subSteps": [
+            {
+              "id": "plan",
+              "name": "Plan",
+              "command": "/salesforce-coe:sp:plan"
+            },
+            {
+              "id": "implement",
+              "name": "Implement",
+              "command": "/salesforce-coe:sp:implement"
+            },
+            {
+              "id": "qa",
+              "name": "QA",
+              "command": "/salesforce-coe:sp:qa"
+            }
+          ]
+        },
+        {
+          "id": "integration-test-initial",
+          "name": "Generate Integration Test Plan",
+          "description": "Generate optimized cross-story integration test checklist after all stories pass QA",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:integration-test-plan",
+          "outputs": ["deliverables/integration-test/*-integration-test-plan.md"],
+          "inputFiles": [
+            {
+              "label": "User Stories",
+              "description": "Select the user stories file",
+              "paths": [""],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "manual-verification-initial",
+          "name": "Consultant Manual Verification",
+          "description": "Walk through org and verify each item in integration test plan. Mark PASS/FAIL",
+          "actionType": "manual"
+        }
+      ]
+    },
+    {
+      "id": "demo-and-uat",
+      "name": "Demo + UAT Handoff",
+      "description": "Generate UAT scripts, prepare demo, present to customer, and begin UAT cycle",
+      "steps": [
+        {
+          "id": "generate-uat-scripts-1",
+          "name": "Generate UAT Test Scripts",
+          "description": "Generate customer-facing UAT test scripts in non-technical language",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:generate-uat-scripts",
+          "outputs": ["deliverables/uat/uat-cycle-1-test-scripts.md"],
+          "inputFiles": [
+            {
+              "label": "User Stories",
+              "description": "Select the user stories file",
+              "paths": [""],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "prep-demo-1",
+          "name": "Prepare Demo",
+          "description": "Generate demo script with UAT instructions for customer demo",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:prep-meeting demo-1",
+          "outputs": ["deliverables/meetings/demo-1-preread.md"],
+          "inputFiles": [
+            {
+              "label": "UAT Scripts",
+              "description": "Select UAT test scripts to include in demo prep",
+              "paths": ["deliverables/uat/"]
+            }
+          ]
+        },
+        {
+          "id": "demo-1-meeting",
+          "name": "Demo Meeting + UAT Handoff",
+          "description": "60 min demo meeting with customer. Hand off UAT test scripts and begin UAT cycle",
+          "actionType": "manual"
+        },
+        {
+          "id": "upload-demo-1-transcript",
+          "name": "Upload Demo Transcript",
+          "description": "Upload the demo meeting transcript",
+          "actionType": "upload",
+          "uploadPath": "requirements/call-transcripts/"
+        }
+      ]
+    },
+    {
+      "id": "iteration",
+      "name": "Iteration Cycle",
+      "description": "Triage UAT feedback, implement changes, verify, and demo",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "collect-uat-feedback",
+          "name": "Collect UAT Feedback",
+          "description": "Receive customer feedback from UAT cycle (email, Slack, notes)",
+          "actionType": "manual"
+        },
+        {
+          "id": "triage-feedback",
+          "name": "Triage UAT Feedback",
+          "description": "Classify feedback as bugs, changes, new requirements, or out-of-scope. Creates/updates user stories",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:triage-feedback",
+          "outputs": ["deliverables/triage/uat-cycle-*-triage.md"]
+        },
+        {
+          "id": "iteration-plan-implement-qa",
+          "name": "Plan, Implement, and QA Triaged Stories",
+          "description": "For each triaged story: /salesforce-coe:sp:plan → /salesforce-coe:sp:implement → /salesforce-coe:sp:qa. Capture deviations with /salesforce-coe:sp:feedback",
+          "actionType": "manual"
+        },
+        {
+          "id": "iteration-integration-test",
+          "name": "Generate Integration Test Plan (Scoped)",
+          "description": "Generate integration test plan scoped to changed stories + regression on dependent stories",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:integration-test-plan",
+          "outputs": ["deliverables/integration-test/*-integration-test-plan.md"],
+          "inputFiles": [
+            {
+              "label": "User Stories",
+              "description": "Select the user stories file",
+              "paths": [""],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "iteration-manual-verification",
+          "name": "Consultant Manual Verification",
+          "description": "Verify changes and run regression on dependent stories in the org",
+          "actionType": "manual"
+        },
+        {
+          "id": "iteration-uat-scripts",
+          "name": "Update UAT Test Scripts",
+          "description": "Generate updated customer-facing test scripts highlighting what changed",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:generate-uat-scripts",
+          "outputs": ["deliverables/uat/uat-cycle-*-test-scripts.md"],
+          "inputFiles": [
+            {
+              "label": "User Stories",
+              "description": "Select the user stories file",
+              "paths": [""],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "iteration-prep-demo",
+          "name": "Prepare Demo",
+          "description": "Generate changes summary and demo script for customer meeting",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:prep-meeting demo-2",
+          "outputs": ["deliverables/meetings/demo-*-preread.md"],
+          "inputFiles": [
+            {
+              "label": "UAT Scripts",
+              "description": "Select UAT test scripts to include in demo prep",
+              "paths": ["deliverables/uat/"]
+            }
+          ]
+        },
+        {
+          "id": "iteration-demo-meeting",
+          "name": "Demo Meeting + UAT Handoff",
+          "description": "60 min demo meeting. Hand off updated UAT test scripts and begin next UAT cycle",
+          "actionType": "manual"
+        },
+        {
+          "id": "iteration-upload-demo-transcript",
+          "name": "Upload Demo Transcript",
+          "description": "Upload the demo meeting transcript",
+          "actionType": "upload",
+          "uploadPath": "requirements/call-transcripts/"
+        }
+      ]
+    },
+    {
+      "id": "final-delivery",
+      "name": "Final Delivery + Go-Live",
+      "description": "Final iteration, full regression testing, and customer sign-off",
+      "steps": [
+        {
+          "id": "final-feedback",
+          "name": "Collect Final UAT Feedback",
+          "description": "Receive final customer feedback from last UAT cycle",
+          "actionType": "manual"
+        },
+        {
+          "id": "final-triage",
+          "name": "Triage Final Feedback",
+          "description": "Classify final feedback items and create/update stories",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:triage-feedback",
+          "outputs": ["deliverables/triage/uat-cycle-*-triage.md"]
+        },
+        {
+          "id": "final-plan-implement-qa",
+          "name": "Final Plan, Implement, and QA",
+          "description": "Implement and validate all remaining changes",
+          "actionType": "manual"
+        },
+        {
+          "id": "final-integration-test",
+          "name": "Full Regression Integration Test",
+          "description": "Generate complete end-to-end integration test plan covering all stories",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:integration-test-plan",
+          "outputs": ["deliverables/integration-test/*-integration-test-plan.md"],
+          "inputFiles": [
+            {
+              "label": "User Stories",
+              "description": "Select the user stories file",
+              "paths": [""],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "final-manual-verification",
+          "name": "Full Manual Verification",
+          "description": "Complete end-to-end walkthrough of the entire org before sign-off",
+          "actionType": "manual"
+        },
+        {
+          "id": "prep-final-signoff",
+          "name": "Prepare Final Sign-off Meeting",
+          "description": "Generate deliverables checklist and sign-off documentation",
+          "actionType": "command",
+          "command": "/salesforce-coe:sp:prep-meeting final-signoff",
+          "outputs": ["deliverables/meetings/final-signoff-preread.md"],
+          "inputFiles": [
+            {
+              "label": "UAT Scripts",
+              "description": "Select UAT test scripts",
+              "paths": ["deliverables/uat/"]
+            },
+            {
+              "label": "Integration Test Plan",
+              "description": "Select the integration test plan",
+              "paths": ["deliverables/integration-test/"],
+              "multiple": false
+            }
+          ]
+        },
+        {
+          "id": "final-signoff-meeting",
+          "name": "Final Sign-off Meeting",
+          "description": "60 min meeting with customer for deliverables sign-off",
+          "actionType": "manual"
+        },
+        {
+          "id": "upload-signoff-transcript",
+          "name": "Upload Sign-off Transcript",
+          "description": "Upload the final sign-off meeting transcript",
+          "actionType": "upload",
+          "uploadPath": "requirements/call-transcripts/"
+        },
+        {
+          "id": "go-live-handoff",
+          "name": "Go-Live + Handoff",
+          "description": "Execute go-live plan and hand off documentation to customer",
+          "actionType": "manual"
+        }
+      ]
+    }
+  ]
+}

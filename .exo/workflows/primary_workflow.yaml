@@ -1,0 +1,110 @@
+name: Service Cloud - Enable Tier
+description: Salesforce Service Cloud implementation — plan, implement, QA, and capture learnings
+
+system_prompt: |
+  You are guiding a Salesforce consultant through structured Service Cloud implementation for a [CLIENT_INDUSTRY] client.
+
+  Stack: Salesforce CLI (`sf`), Metadata API, SOQL, Apex, Git.
+  The project has user stories defined in user-stories.md.
+  Feature guides are provided by the salesforce-coe grimoire plugin — these are opinionated playbooks that improve with every implementation.
+  Key resources are provided by the salesforce-coe grimoire plugin (templates, auth guide, learning-loop skill).
+
+  The consultant works in a loop: Orient → Decide → Act → Verify → Commit.
+  Your job is to help them stay in the right phase and move to the next one naturally.
+
+  - When they seem lost or starting fresh: help them orient (org auth state, active story, what's been done)
+  - When they know what story to tackle but haven't planned: help them plan (authenticate, query org state, map to feature guides, generate grounded plan)
+  - When they have an approved plan: help them implement (execute via CLI, verify each step, capture deviations)
+  - When they've implemented: help them verify (run QA test cases, capture evidence, validate acceptance criteria)
+  - When things are clean: help them commit (stage, message with ClickUp ID, push)
+
+  Don't be prescriptive about which phase they're in. Follow their lead, but if they're skipping steps that matter (e.g. implementing without authenticating to the org, or skipping QA), nudge them.
+
+  Core principles:
+  - Always authenticate to the org before querying. Ground plans in actual org state, never assumptions.
+  - Get explicit user approval before updating any feature guide.
+  - Capture deviations as learnings — every surprise makes the guides better.
+  - CLI-first: use `sf` commands for everything possible.
+  - Concrete evidence in QA — actual query results, record IDs, field values. Never vague "verified" statements.
+
+  Be concise. The consultant is experienced — they don't need explanations of what Salesforce or SOQL are.
+
+compaction_prompt: |
+  Preserve: current user story and its phase (plan/implement/qa), active org authentication state,
+  feature guides referenced, implementation decisions made, deviations captured, CLI commands executed
+  and their results, any errors encountered and resolution status, uncommitted changes summary,
+  ClickUp ticket ID for commits.
+
+welcome_message: |
+  # Service Cloud Starter Pack
+
+  Salesforce Service Cloud implementation for a [CLIENT_INDUSTRY] client.
+  User stories defined in user-stories.md, feature guides that improve with every implementation.
+
+  **{{branch}}** · `{{repo_path}}`
+
+  ---
+
+  ### Commands
+
+  | Command | What it does |
+  |---------|-------------|
+  | `/sp:setup` | Initialize project with client name, scope tier, and existing materials |
+  | `/salesforce-coe:sp:create-or-update-requirements-worksheet` | Generate or update a pre-filled requirements worksheet from discovery transcripts, SOWs, and client documents |
+  | `/salesforce-coe:sp:create-user-stories` | Generate sequenced user stories from a finalized requirements worksheet |
+  | `/salesforce-coe:sp:plan US-XXX` | Authenticate to org, query current state, map to feature guides, generate implementation plan with QA test cases |
+  | `/salesforce-coe:sp:implement US-XXX` | Execute the approved plan step-by-step via CLI, verify each step, capture deviations |
+  | `/salesforce-coe:sp:qa US-XXX` | Run QA test cases defined in the plan, capture evidence, validate acceptance criteria |
+  | `/salesforce-coe:sp:feedback` | Capture a learning or gotcha and update the relevant feature guide |
+
+  ---
+
+  ### Progress
+
+  ```
+  {{status_tree}}
+  ```
+
+  ### Next Action
+
+  Pick the next user story and run `/salesforce-coe:sp:plan US-XXX` to start planning.
+
+commands:
+  # Local command
+  - name: sp:setup
+    type: local
+    source: .claude/commands/sp:setup.md
+    label: Project Setup
+    description: Initialize project with client name, tier, and existing materials. Installs salesforce-coe plugin.
+
+  # Commands from salesforce-coe grimoire plugin
+  - name: salesforce-coe:sp:create-or-update-requirements-worksheet
+    type: plugin
+    source: salesforce-coe
+    label: Requirements Worksheet
+    description: Generate or update a pre-filled requirements worksheet from discovery transcripts, SOWs, and client documents
+  - name: salesforce-coe:sp:create-user-stories
+    type: plugin
+    source: salesforce-coe
+    label: Create User Stories
+    description: Generate sequenced user stories from a finalized requirements worksheet
+  - name: salesforce-coe:sp:plan
+    type: plugin
+    source: salesforce-coe
+    label: Plan
+    description: Authenticate to org, query current state, map to feature guides, generate grounded implementation plan
+  - name: salesforce-coe:sp:implement
+    type: plugin
+    source: salesforce-coe
+    label: Implement
+    description: Execute approved plan via CLI deployments, verify each step, capture deviations as learnings
+  - name: salesforce-coe:sp:qa
+    type: plugin
+    source: salesforce-coe
+    label: QA Validate
+    description: Run test cases from plan, capture evidence with actual query results, validate acceptance criteria
+  - name: salesforce-coe:sp:feedback
+    type: plugin
+    source: salesforce-coe
+    label: Capture Feedback
+    description: Context-aware learning capture — maps feedback to feature guides with proper attribution
