@@ -94,7 +94,8 @@
           "name": "Upload Call Transcript",
           "description": "Upload a new call transcript (discovery call, walkthrough recording, follow-up) to feed into the next worksheet pass",
           "actionType": "upload",
-          "uploadPath": "requirements/call-transcripts/"
+          "uploadPath": "requirements/call-transcripts/",
+          "optional": true
         }
       ]
     },
