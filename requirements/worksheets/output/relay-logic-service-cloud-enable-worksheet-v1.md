@@ -25,7 +25,7 @@
 - Sections not started: 0
 
 ### Key Findings from Discovery
-1. **Shared Gmail inbox is the current system** — No CRM, no case tracking, no structure. Everything runs through email. This is a greenfield implementation. *(AE handoff call)*
+1. **Shared Gmail inbox is the current system** — Not all CRM, no case tracking, no structure. Everything runs through email. This is a greenfield implementation. *(AE handoff call)*
 2. **VIP customer handling is the #1 priority** — Lisa Chen (VP Customer Success) specifically cited a Platinum customer with 3 open tickets that went unnoticed until churn threat. Tiered routing is critical. *(AE handoff call)*
 3. **Product and channel tracking on cases is required** — Lisa was "emphatic" about tracking which product a case relates to and how it came in. These are must-have custom fields. *(AE handoff call)*
 4. **Team is ~8 users (within Enable tier limit of 10)** — 6 support agents + 2 managers. Well within capacity. *(AE handoff call)*
@@ -313,7 +313,7 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Can one contact work with multiple customer accounts? | ❓ Needs Discussion | 📝 AI (Low): Unlikely for B2B SaaS — contacts usually belong to one company. |
+| Can one contact work with multiple customer accounts? | ✅ Confirmed: No | Contacts are only associated to one account. |
 
 ### Required Fields
 

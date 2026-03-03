@@ -1,0 +1,110 @@
+{
+  "completedSteps": {
+    "setup": {
+      "completedAt": "2026-03-02T15:31:39.347Z"
+    },
+    "upload-transcripts": {
+      "completedAt": "2026-03-02T15:32:31.010Z"
+    },
+    "generate-worksheet": {
+      "completedAt": "2026-03-02T15:57:33.033Z"
+    },
+    "upload-transcript": {
+      "completedAt": "2026-03-02T16:03:27.579Z"
+    },
+    "create-user-stories": {
+      "completedAt": "2026-03-03T15:13:07.669Z"
+    },
+    "plan-implement-qa-loop::US-001-team-setup.md::implement": {
+      "completedAt": "2026-03-02T16:53:18.365Z"
+    },
+    "plan-implement-qa-loop::US-001-team-setup.md::qa": {
+      "completedAt": "2026-03-02T16:56:39.604Z"
+    },
+    "plan-implement-qa-loop::US-002-account-contact-data-model.md::plan": {
+      "completedAt": "2026-03-02T23:23:49.746Z"
+    },
+    "plan-implement-qa-loop::US-001-team-setup.md::plan": {
+      "completedAt": "2026-03-02T23:47:10.935Z"
+    },
+    "plan-implement-qa-loop::US-002-account-contact-data-model.md::implement": {
+      "completedAt": "2026-03-02T23:54:31.229Z"
+    },
+    "plan-implement-qa-loop::US-002-account-contact-data-model.md::qa": {
+      "completedAt": "2026-03-03T00:01:55.717Z"
+    }
+  },
+  "completedPhases": {
+    "requirements-worksheet": {
+      "completedAt": "2026-03-02T16:03:39.717Z"
+    }
+  },
+  "uploadedFiles": {
+    "upload-transcripts": [
+      {
+        "name": "sales-transcript.md",
+        "path": "/home/exo/workspace/salesforce-consultant-demo/requirements/call-transcripts/sales-transcript.md",
+        "uploadedAt": "2026-03-02T15:32:21.195Z"
+      }
+    ]
+  },
+  "stepConversations": {
+    "setup": [
+      "5e5c0fff-d8ea-490b-b2ba-62fbfa569386"
+    ],
+    "generate-worksheet": [
+      "4349a4a3-31da-4163-8675-b9ed90822e6b"
+    ],
+    "create-user-stories": [
+      "a386d250-f81b-428a-9ab6-02e8d5eaa96f"
+    ],
+    "plan-implement-qa-loop::US-001-team-setup.md::plan": [
+      "215d2fac-3675-4061-8599-f59558bb1661"
+    ],
+    "plan-implement-qa-loop::US-001-team-setup.md::implement": [
+      "f69979f4-00ba-494e-bb3d-c4ab35b241fa"
+    ],
+    "plan-implement-qa-loop::US-001-team-setup.md::qa": [
+      "2edba21f-41bf-48ea-9669-6e5ee2d03318"
+    ],
+    "plan-implement-qa-loop::US-002-account-contact-data-model.md::plan": [
+      "a883f1ea-26cc-4d6a-9670-1087657ca8e1"
+    ],
+    "plan-implement-qa-loop::US-002-account-contact-data-model.md::implement": [
+      "e8e5110c-681d-48f6-97bb-80762b4422e0"
+    ],
+    "plan-implement-qa-loop::US-002-account-contact-data-model.md::qa": [
+      "229a9fd0-47dd-4443-9e1e-d525ad12f02a"
+    ]
+  },
+  "phaseIterations": {
+    "requirements-worksheet": [
+      {
+        "iterationNumber": 1,
+        "completedAt": "2026-03-02T15:50:13.210Z",
+        "completedSteps": {
+          "generate-worksheet": {
+            "completedAt": "2026-03-02T15:40:19.697Z"
+          },
+          "upload-transcript": {
+            "completedAt": "2026-03-02T15:50:07.000Z"
+          }
+        },
+        "uploadedFiles": {
+          "upload-transcript": [
+            {
+              "name": "discovery-transcript.md",
+              "path": "/home/exo/workspace/salesforce-consultant-demo/requirements/call-transcripts/discovery-transcript.md",
+              "uploadedAt": "2026-03-02T15:50:01.489Z"
+            }
+          ]
+        },
+        "stepConversations": {
+          "generate-worksheet": [
+            "18d669ac-c6c0-4bae-9ab8-753e7e9263cd"
+          ]
+        }
+      }
+    ]
+  }
+}
