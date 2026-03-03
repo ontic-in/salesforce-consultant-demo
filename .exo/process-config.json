@@ -109,7 +109,7 @@
           "name": "Create User Stories",
           "description": "Decompose finalized worksheet into sequenced user stories with acceptance criteria and dependency map",
           "actionType": "command",
-          "command": "/salesforce-coe:sp:create-user-stories",
+          "command": "/salesforce-coe:sp:plan",
           "outputs": ["deliverables/user-stories/"],
           "inputFiles": [
             {
@@ -128,26 +128,16 @@
       "description": "Plan, implement, and QA each user story against a live scratch org",
       "steps": [
         {
-          "id": "plan-implement-qa-loop",
-          "name": "Plan → Implement → QA Each Story",
-          "description": "For each user story: plan (grounded in org state), implement (via CLI), and QA (with SOQL evidence). Use /salesforce-coe:sp:feedback to capture learnings when things deviate.",
+          "id": "execute-stories",
+          "name": "Execute Each Story",
+          "description": "For each user story: execute plan, implementation, and QA",
           "actionType": "forEach",
           "scanPath": "deliverables/user-stories/",
           "subSteps": [
             {
-              "id": "plan",
-              "name": "Plan",
-              "command": "/salesforce-coe:sp:plan"
-            },
-            {
-              "id": "implement",
-              "name": "Implement",
-              "command": "/salesforce-coe:sp:implement"
-            },
-            {
-              "id": "qa",
-              "name": "QA",
-              "command": "/salesforce-coe:sp:qa"
+              "id": "execute",
+              "name": "Execute",
+              "command": "/salesforce-coe:sp:execute"
             }
           ]
         }
