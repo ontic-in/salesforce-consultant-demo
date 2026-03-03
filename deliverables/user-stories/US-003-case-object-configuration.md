@@ -1,6 +1,6 @@
 # US-003: Case Object Configuration
 
-**Status:** [ ] Not Started
+**Status:** [x] Verified
 
 ## Business Requirement
 

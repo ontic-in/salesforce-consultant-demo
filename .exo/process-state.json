@@ -32,6 +32,12 @@
     },
     "plan-implement-qa-loop::US-002-account-contact-data-model.md::qa": {
       "completedAt": "2026-03-03T00:01:55.717Z"
+    },
+    "execute-stories::US-001-team-setup.md::execute": {
+      "completedAt": "2026-03-03T15:24:03.569Z"
+    },
+    "execute-stories::US-002-account-contact-data-model.md::execute": {
+      "completedAt": "2026-03-03T15:24:04.780Z"
     }
   },
   "completedPhases": {
@@ -75,6 +81,9 @@
     ],
     "plan-implement-qa-loop::US-002-account-contact-data-model.md::qa": [
       "229a9fd0-47dd-4443-9e1e-d525ad12f02a"
+    ],
+    "execute-stories::US-003-case-object-configuration.md::execute": [
+      "472396d9-c075-492c-b667-5b52894f6a64"
     ]
   },
   "phaseIterations": {
