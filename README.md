@@ -1,4 +1,4 @@
-# Relay Logic - Relay Logic Service Cloud Implementation
+# relay logic - relay logic testing
 
 A template repository for Salesforce Service Cloud engagements. Clone this repo for each new client engagement, then run `/sp:setup` to personalize it.
 

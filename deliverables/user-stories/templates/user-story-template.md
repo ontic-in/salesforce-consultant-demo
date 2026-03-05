@@ -5,7 +5,7 @@ Use this format when documenting user stories in `user-stories.md`.
 ---
 
 ```markdown
-# Relay Logic - User Stories
+# relay logic - User Stories
 
 ## US-001: [Title]
 

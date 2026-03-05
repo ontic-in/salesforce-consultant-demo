@@ -1,7 +1,7 @@
-# Claude Instructions for Relay Logic Service Cloud Implementation
-> **Client:** Relay Logic
+# Claude Instructions for relay logic testing
+> **Client:** relay logic
 > **Tier:** Enable ($20K, 6-8 weeks)
-> **Initialized:** 2026-03-02
+> **Initialized:** 2026-03-05
 > **Scope Reference:** `tiers/service-cloud/enable.md`
 
 
