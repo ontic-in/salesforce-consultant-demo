@@ -1,11 +1,10 @@
 # Service Cloud Starter Pack: Enable Tier Requirements Worksheet
 
 **Client:** Relay Logic
+**Date:** 2026-03-05
 **Cloud:** Service Cloud
-**Tier:** Enable ($20,000 | 6-8 weeks)
-**Date:** 2026-03-02
-**Version:** 1 (AI Pre-filled from Sales Handoff Transcript)
-**Consultant:** [Consultant Name]
+**Tier:** Enable ($20,000 / 6-8 weeks)
+**Version:** 1 (Initial AI Pre-fill)
 
 ---
 
@@ -14,70 +13,69 @@
 **Client:** Relay Logic
 **Cloud:** Service Cloud
 **Tier:** Enable ($20,000)
-**Industry:** B2B SaaS (Workflow Automation)
-**Team Size:** ~200 employees (~8 Salesforce users)
-**Version:** 1 (Initial — 2026-03-02)
+**Industry:** B2B SaaS (Workflow Automation Platform)
+**Team Size:** ~200 employees (7 Salesforce users)
 
 ### Worksheet Completion Status
-- Sections complete (Confirmed): 0 of 14
-- Sections partially filled (AI suggestions): 12
-- Sections needing discussion: 2
+- Sections complete (✅ Confirmed): 0 of 15
+- Sections partially filled (📝 AI suggestions): 13
+- Sections needing discussion (❓): 2
 - Sections not started: 0
 
 ### Key Findings from Discovery
-1. **Shared Gmail inbox is the current system** — Not all CRM, no case tracking, no structure. Everything runs through email. This is a greenfield implementation. *(AE handoff call)*
-2. **VIP customer handling is the #1 priority** — Lisa Chen (VP Customer Success) specifically cited a Platinum customer with 3 open tickets that went unnoticed until churn threat. Tiered routing is critical. *(AE handoff call)*
-3. **Product and channel tracking on cases is required** — Lisa was "emphatic" about tracking which product a case relates to and how it came in. These are must-have custom fields. *(AE handoff call)*
-4. **Team is ~8 users (within Enable tier limit of 10)** — 6 support agents + 2 managers. Well within capacity. *(AE handoff call)*
-5. **Speed is a priority** — Lisa wants the team using Salesforce "within a couple weeks, not a couple months." Keep implementation practical and focused. *(AE handoff call)*
+1. **Shared Gmail inbox is the primary pain point** — Cases are being dropped, customers getting conflicting answers from wrong-team replies (Sales transcript + Discovery transcript)
+2. **Tiered SLA model is critical** — Platinum (2hr), Gold (4hr), Silver (next business day) response times drive prioritization (Discovery transcript, Lisa Chen)
+3. **VIP detection with smart routing** — Gold/Platinum customers with 2+ open cases must be flagged as Critical and routed to Senior Queue (Discovery transcript, Lisa Chen)
+4. **Product-based team split** — Marcus's team handles Core Platform, Priya's team handles Integrations; agents must NOT see cross-team cases (Discovery transcript, Marcus Webb)
+5. **New customer prioritization** — Accounts <30 days old auto-bump to High priority to protect first impressions (Discovery transcript, Lisa Chen)
 
 ### Recommended Focus Areas
-1. **Case management structure** — Moving from unstructured email to structured cases with proper fields, types, and statuses is the foundational win.
-2. **Tier-based routing and escalation** — Assignment rules that route by customer tier (Silver/Gold/Platinum) with escalation rules that enforce different SLAs per tier.
-3. **Email-to-Case from Gmail** — Since the team already lives in Gmail, Email-to-Case provides the smoothest transition path. Cases created from email with threading preserved.
+1. **Security & Access (OWD + Sharing)** — Private case visibility with role-based sharing is foundational; must be configured first to enforce team separation
+2. **Case Data Structure** — Product field (required), Customer Tier, and Case Origin fields are prerequisites for routing and automation
+3. **Smart Routing Automation** — 3 flows (VIP detection, new customer priority, auto-task creation) use the full Enable tier allocation; design carefully
 
 ### Industry-Specific Recommendations
-Based on Perplexity research for B2B SaaS:
-- **Tiered SLAs are standard** — B2B SaaS companies commonly use Silver (8h response) / Gold (2-4h) / Platinum (30-60 min) response time tiers. Relay Logic's tiered approach is well-aligned.
-- **Common case types for SaaS support** — Bug reports, integration issues, billing inquiries, feature requests, and onboarding questions. Map these to Relay Logic's specific product areas.
-- **Multi-case escalation** — Industry best practice is to auto-escalate when a single account has 3+ open cases. This directly addresses Lisa's Platinum customer incident.
+Based on industry research for B2B SaaS:
+- SLA compliance tracking is critical — target >95% compliance rate; B2B SaaS customers expect sub-1-hour acknowledgment for critical issues
+- First Contact Resolution (FCR) is a key differentiator — track it from day one
+- Tiered SLA model aligns with B2B SaaS best practices where premium subscribers receive priority assistance
 
 ### Items for Elevate/Transform Discussion
-| Feature | Context from Call | Why Out of Scope |
-|---------|-------------------|------------------|
-| Customer Portal | "Lisa asked about a customer portal — somewhere customers could log in and see their tickets" | Customer Community/Portal requires Transform tier ($60K) |
-| Stripe Integration | "They use Stripe for billing, so she mentioned wanting to see subscription data in Salesforce" | External system integration beyond Enable scope. Consider Elevate ($35K) or Transform. |
+| Feature | Context from Discovery | Why Out of Scope |
+|---------|----------------------|------------------|
+| Customer Portal | Lisa: "We want a customer portal eventually. Somewhere customers can log in, see their cases" | Transform tier feature (Customer Community/Portal) |
+| Stripe Integration | Lisa: "Our billing system — we use Stripe — it'd be great if we could see subscription info" | Custom integration, not included in any standard tier |
 
 ### Assumptions Made
 | Assumption | Confidence | Verify With Client |
 |------------|------------|-------------------|
-| Team uses Gmail (not Outlook) | High | AE said "shared Gmail inbox" — confirm all agents use Gmail |
-| ~8 Salesforce users total | Medium | AE said "half a dozen support folks plus a couple of managers" — get exact headcount |
-| US-based, single time zone | Low | Not mentioned in transcript — confirm time zone and business hours |
-| No historical cases to migrate | Medium | Current system is email — unclear if they want to import email threads as cases |
-| Customer tiers are on the Account level | Medium | Confirm how Silver/Gold/Platinum is determined (contract, revenue, manual?) |
-| Standard business hours (M-F) | Low | Not discussed — confirm if they offer weekend/after-hours support |
+| Business hours are US business hours (9-5 M-F) | Medium | Confirm time zone and exact hours |
+| Products are: Core Platform, Integrations, Analytics Module | High | Confirm — 3 products mentioned in discovery |
+| No historical cases to migrate (Gmail inbox) | Medium | Ask if they want to import any email threads as cases |
+| Email system is Gmail (shared inbox mentioned) | High | Confirm agent email client preference |
+| Calendar fiscal year | Low | Not discussed — confirm |
+| SLA timing is business hours | Medium | Lisa was unsure — flagged as needs discussion |
 
-### Questions to Clarify in Discovery Session
-1. **What are the exact SLA response times per tier?** — Jordan mentioned "different response times by tier" but didn't have specifics. Need numbers from Lisa/Marcus.
-2. **What products/modules does Relay Logic offer?** — They want to track "product" on cases. Need the actual product list for picklist values.
-3. **How are customer tiers determined?** — Silver/Gold/Platinum — is this contract-based, revenue-based, or manually assigned?
-4. **What is the team's exact structure?** — Need names, emails, roles, and reporting lines for all 8 users.
-5. **Do they need a web form for case submission?** — Transcript focused on email, but Web-to-Case is in scope if they want it.
-6. **What does "smart routing" mean specifically?** — Lisa wants high-tier multi-case customers flagged. Need to define the exact routing logic.
+### Questions to Clarify in Next Session
+1. **SLA timing — business hours vs clock hours?** — Lisa was unsure; this affects escalation rule configuration
+2. **Time zone and business hours?** — Needed for escalation rule timing and business hours calendar
+3. **Customer tier auto-populate from Account?** — Lisa prefers auto-populate; need to confirm Account field exists or will be created
+4. **Data migration scope?** — Are there existing accounts/contacts to import, or starting fresh?
+5. **Holiday schedule?** — Which holidays to observe for SLA/escalation pausing?
 
 ---
 
 ## How to Use This Worksheet
 
-This worksheet has been pre-filled using information from the AE handoff call with Jordan Park (Feb 25, 2026). Review each section and bring this to your discovery call with Lisa Chen and Marcus.
+This worksheet captures everything we need to set up your Service Cloud system. We'll go through it together section by section.
 
-- **📝 AI (High)** — Directly stated in the handoff transcript
-- **📝 AI (Medium)** — Inferred from context in the transcript
-- **📝 AI (Low)** — Best practice suggestion from industry research (no client input)
-- **📝 AI (Perplexity)** — Validated against B2B SaaS industry best practices
-- **❓ Needs Discussion** — Unknown or unclear — ask in discovery session
-- **N/A** — Not applicable to this client
+- **✅ Confirmed** - You've confirmed this is correct
+- **📝 AI (High)** - Directly stated in discovery transcript
+- **📝 AI (Medium)** - Inferred from context across multiple data points
+- **📝 AI (Low)** - Best practice suggestion from industry research
+- **📝 AI (Perplexity)** - Validated via industry research
+- **❓ Needs Discussion** - We need to talk through this together
+- **N/A** - Not applicable to your business
 
 ---
 
@@ -89,11 +87,11 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What time zone is your main office in? | ❓ Needs Discussion | Not mentioned in handoff call |
-| Do you have support teams in multiple time zones? | ❓ Needs Discussion | Company is ~200 employees, may have distributed team |
-| What are your support team's business hours? | ❓ Needs Discussion | 📝 AI (Low): B2B SaaS typical is M-F 8AM-6PM with extended hours for Platinum |
-| Do you observe holidays? | ❓ Needs Discussion | Affects escalation rule timing |
-| If yes, which holidays? | ❓ Needs Discussion | 📝 AI (Low): US federal holidays typical for mid-market SaaS |
+| What time zone is your main office in? | ❓ Needs Discussion | Not mentioned in discovery |
+| Do you have support teams in multiple time zones? | 📝 AI (Medium): No | Single team described; no mention of distributed support |
+| What are your support team's business hours? | ❓ Needs Discussion | Lisa was unsure about business hours vs clock hours for SLAs |
+| Do you observe holidays? | ❓ Needs Discussion | Not discussed; affects escalation rule timing |
+| If yes, which holidays? | ❓ Needs Discussion | |
 
 ---
 
@@ -105,33 +103,29 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| How many people will use the support system? | 📝 AI (High): ~8 users (6 agents + 2 managers) | AE: "About half a dozen support folks, plus a couple of managers." Max 10 for Enable tier — within limit. |
+| How many people will use the support system? | 📝 AI (High): 7 users | Lisa (VP) + Marcus & Priya (leads) + 4 agents. Within 10-user Enable tier limit. |
 
 ### User List
 
-*Please list each user who needs access:*
+| Name | Email | Role | Manager | Notes |
+|------|-------|------|---------|-------|
+| Lisa Chen | ❓ Needs Discussion | Manager (VP Customer Success) | — | 📝 AI (High): Oversees all of customer success; needs full case visibility |
+| Marcus Webb | ❓ Needs Discussion | Team Lead | Lisa Chen | 📝 AI (High): Leads Core Platform support team |
+| Priya Sharma | ❓ Needs Discussion | Team Lead | Lisa Chen | 📝 AI (High): Leads Integrations support team |
+| Jake Torres | ❓ Needs Discussion | Agent | Marcus Webb | 📝 AI (High): Core Platform team; also in Senior Queue (longest tenure) |
+| Anika Patel | ❓ Needs Discussion | Agent | Marcus Webb | 📝 AI (High): Core Platform team |
+| Sam Okafor | ❓ Needs Discussion | Agent | Priya Sharma | 📝 AI (High): Integrations team |
+| Rachel Kim | ❓ Needs Discussion | Agent | Priya Sharma | 📝 AI (High): Integrations team |
 
-| Name | Email | Role | Manager |
-|------|-------|------|---------|
-| Lisa Chen | ❓ Needs Discussion | Manager (VP Customer Success) | 📝 AI (High): Main sponsor |
-| Marcus [Last Name] | ❓ Needs Discussion | Team Lead | 📝 AI (High): Reports to Lisa |
-| Agent 1 | ❓ Needs Discussion | Agent | ❓ Marcus or Lisa |
-| Agent 2 | ❓ Needs Discussion | Agent | ❓ Marcus or Lisa |
-| Agent 3 | ❓ Needs Discussion | Agent | ❓ Marcus or Lisa |
-| Agent 4 | ❓ Needs Discussion | Agent | ❓ Marcus or Lisa |
-| Agent 5 | ❓ Needs Discussion | Agent | ❓ Marcus or Lisa |
-| Agent 6 | ❓ Needs Discussion | Agent | ❓ Marcus or Lisa |
-
-*Need exact headcount, names, emails, and reporting lines from discovery call.*
+*7 of 10 maximum users for Enable tier.*
 
 ### Support Team Hierarchy
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What are the reporting relationships for your support team? | 📝 AI (Medium): Multi-level (Lisa → Marcus → Agents) | AE mentioned Lisa as VP and Marcus as team lead — implies 3-level hierarchy |
-| Do managers need to see their team's cases automatically? | 📝 AI (Medium): Yes | Lisa needs visibility into VIP cases across the team. Role hierarchy grants upward visibility. |
-| Do any users need special permissions beyond standard case management? | ❓ Needs Discussion | Lisa likely needs admin/reporting access. Marcus may need bulk operations. |
-| If yes, what special permissions? | ❓ Needs Discussion | |
+| What are the reporting relationships? | 📝 AI (High): Multi-level (Lisa → Team Leads → Agents) | 3-level hierarchy: VP → 2 Team Leads → 4 Agents |
+| Do managers need to see their team's cases automatically? | 📝 AI (High): Yes — with restrictions | Lisa sees ALL cases. Marcus sees his team only. Priya sees her team only. Agents see only their own + team queue. |
+| Do any users need special permissions beyond standard? | 📝 AI (High): No deletions for anyone | Lisa: "Nobody deletes anything." Leads and agents can update/close but not delete. |
 
 ---
 
@@ -143,23 +137,23 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Where is your customer data currently stored? | 📝 AI (High): Email (shared Gmail inbox) | AE: "running everything through a shared Gmail inbox." May also have customer data in other systems (billing via Stripe mentioned). |
-| Approximately how many customer accounts do you have? | ❓ Needs Discussion | Company is mid-market B2B SaaS with ~200 employees — could be hundreds to thousands of accounts |
-| Approximately how many contacts (people) do you have? | ❓ Needs Discussion | |
-| Do you have historical cases to bring over? | ❓ Needs Discussion | 📝 AI (Medium): Unlikely — current "cases" are email threads in Gmail. May want a clean start. Confirm with client. |
+| Where is your customer data currently stored? | 📝 AI (High): Email (shared Gmail inbox) | Lisa: "We've been running support out of a shared Gmail inbox for about two years" |
+| Approximately how many customer accounts? | ❓ Needs Discussion | Not mentioned; B2B SaaS with ~200 employees suggests mid-market customer base |
+| Approximately how many contacts? | ❓ Needs Discussion | Not mentioned |
+| Do you have historical cases to bring over? | 📝 AI (Medium): Unlikely — email threads | Gmail threads don't map cleanly to cases; recommend starting fresh |
 
 ### Data Quality
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| How clean is your current data? | ❓ Needs Discussion | 📝 AI (Medium): Likely "significant cleanup needed" given unstructured Gmail inbox |
-| What cleanup is needed before migration? | ❓ Needs Discussion | Will depend on what data sources exist beyond email |
+| How clean is your current data? | 📝 AI (Medium): Some cleanup needed | Email-based system likely has inconsistent data; no structured records |
+| What cleanup is needed? | ❓ Needs Discussion | Need to understand what customer/account data exists outside Gmail |
 
 ### Duplicate Prevention
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What duplicate prevention do you need going forward? | 📝 AI (Low): Block duplicate Contacts by email, Alert on duplicate Accounts by name | Standard B2B SaaS best practice |
+| What duplicate prevention do you need? | 📝 AI (Low): Block duplicate Contacts by email, Alert on duplicate Accounts by name | Standard B2B SaaS best practice (Perplexity) |
 
 ---
 
@@ -171,42 +165,42 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What are the 3-5 main types of support requests you handle? | 📝 AI (Perplexity): 1. Technical Issue / Bug Report 2. Integration / API Issue 3. Billing Question 4. Feature Request 5. General Inquiry | Perplexity: Common B2B SaaS case types. Relay Logic is a workflow automation platform — integration issues are likely high volume. Confirm with Lisa/Marcus which categories match their reality. |
+| What are the main types of support requests? | 📝 AI (Medium): 1. Technical Issue 2. Product Question 3. Feature Request 4. Bug Report | Not explicitly listed in discovery; inferred from B2B SaaS workflow automation context. 📝 AI (Perplexity): B2B SaaS typically categorizes as Technical, Product, Billing, Feature Request, Bug |
 
 ### Case Statuses
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you need additional case statuses beyond standard (New, In Progress, Escalated, Closed)? | 📝 AI (Perplexity): Yes — add "Waiting on Customer" and "Resolved" | Perplexity: "Waiting on Customer" is standard for B2B SaaS to pause SLA timers. "Resolved" separates agent resolution from formal closure. Full set: New, In Progress, Waiting on Customer, Escalated, Resolved, Closed. |
+| Do you need additional statuses beyond standard? | 📝 AI (Perplexity): Yes — add "Waiting on Customer" | Standard: New, In Progress, Escalated, Closed. Industry best practice adds "Waiting on Customer" to pause SLA timers. Marcus mentioned cases sitting because agents get busy — status tracking helps. |
 
 ### Case Priorities
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you use the standard priorities (Low, Medium, High, Critical)? | 📝 AI (Low): Yes — use standard (Low, Medium, High, Critical) | Standard priorities work well. Priority + Customer Tier together drive escalation timing. |
+| Do you use standard priorities? | 📝 AI (High): Yes — Low, Medium, High, Critical | Lisa described Critical for VIP cases, High for new customers. Standard set aligns with their needs. |
 
 ### Escalation Rules
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Should High priority cases escalate immediately or after a time period? | ❓ Needs Discussion | 📝 AI (Perplexity): For B2B SaaS, High priority Platinum cases should escalate after 1 hour; Gold after 2-3 hours; Silver after 6-8 hours |
-| Should Medium priority cases escalate? | ❓ Needs Discussion | 📝 AI (Perplexity): Yes — Platinum after 2 hours, Gold after 4-6 hours, Silver after 12-18 hours |
-| Should Low priority cases escalate? | ❓ Needs Discussion | 📝 AI (Perplexity): Yes — Platinum after 4 hours, Gold after 8 hours, Silver after 24+ hours |
-| How long should a case stay in "New" status before escalating? | ❓ Needs Discussion | Lisa needs to define SLAs per tier. AE: "She mentioned different response times by tier too, but I don't have the specifics." |
-| Who should receive notifications when cases escalate? | 📝 AI (Medium): Lisa Chen (VP) and/or Marcus (Team Lead) | AE: Lisa was "livid" about the Platinum case that slipped through. She needs escalation visibility. |
+| Should Critical priority cases escalate immediately? | 📝 AI (High): Immediately via VIP detection flow | Lisa: VIP cases go straight to Critical and Senior Queue |
+| Should High priority cases escalate? | 📝 AI (Perplexity): After 2 hours with no response | Industry standard for B2B SaaS: escalate High within 2-4 hours if unworked |
+| Should Medium priority cases escalate? | 📝 AI (Low): After 8 business hours | Perplexity: Mid-priority B2B SaaS cases typically escalate within 1 business day |
+| Should Low priority cases escalate? | 📝 AI (Low): After 24 business hours | Perplexity: Low-priority cases escalate if untouched for >1 business day |
+| How long should a case stay in "New" before escalating? | ❓ Needs Discussion | Depends on SLA timing decision (business hours vs clock hours) |
+| Who should receive escalation notifications? | 📝 AI (High): Case owner's direct manager (Marcus or Priya) + Lisa for Critical | Follows role hierarchy |
 
 ### Custom Case Fields
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What information beyond standard fields do agents need to track on cases? | 📝 AI (High): 1. Product / Module (picklist) 2. Case Channel / Origin (picklist) 3. Customer Tier (Silver/Gold/Platinum — from Account) | AE: "They want to track product and channel on every case. Lisa was pretty emphatic about that." Customer Tier drives routing and escalation logic. |
-| | 📝 AI (Perplexity): 4. Affected Workflow ID (text — for linking to specific customer workflows) 5. Software Version (picklist — for tracking version-specific issues) | Perplexity: B2B SaaS support teams commonly track product-specific identifiers. Relay Logic likely needs a way to reference customer workflows. ❓ Confirm with client. |
+| What custom fields do agents need? | 📝 AI (High): 1. **Product** (Picklist: Core Platform, Integrations, Analytics Module) — REQUIRED 2. **Customer Tier** (Picklist: Silver, Gold, Platinum) 3. **Case Origin** (Standard field — Email, Phone, Web) | Lisa: "Every single case needs to have a product tagged on it." Marcus: "Customer tier would be huge." Case Origin is a standard Salesforce field — just needs configured values. |
 
 ### Required Case Fields
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Which fields should be required when creating a case? | 📝 AI (Medium): Case Type, Priority, Customer Contact, Description, Product/Module | Product tracking is a top priority for Lisa — making it required ensures agents always capture it. |
+| Which fields should be required? | 📝 AI (High): Product, Contact, Description | Lisa was "emphatic" about Product being required. Contact and Description are standard best practices. |
 
 ---
 
@@ -218,34 +212,34 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you want customers to submit cases via a form on your website? | ❓ Needs Discussion | Not mentioned in handoff call. Current support is via email. May want this as an additional channel. |
-| What information should customers provide on the web form? | 📝 AI (Perplexity): Name, Email, Company, Subject, Description, Product/Feature, Severity | Perplexity: Limit to 7-10 fields for good UX. Include product dropdown to auto-categorize. |
-| Should the web form include spam protection (reCAPTCHA)? | 📝 AI (Low): Yes | Standard best practice for public-facing forms |
+| Do you want a web form for case submission? | 📝 AI (High): Yes — planned | Marcus: "We're planning to add a web form on our help center" |
+| What fields on the web form? | 📝 AI (Perplexity): Name, Email, Company, Product (dropdown), Subject, Description | Keep lean — 5-7 fields max for good UX. B2B SaaS best practice: include product selector to enable auto-routing. |
+| Include reCAPTCHA? | 📝 AI (Low): Yes | Recommended for public-facing forms to prevent spam |
 
 ### Email-to-Case
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you want customers to create cases by emailing a support address? | 📝 AI (High): Yes | AE: Team currently uses shared Gmail inbox. Email-to-Case is the natural migration path. |
-| What email address(es) should customers use? | 📝 AI (Medium): support@relaylogic.com (or current shared Gmail address) | ❓ Need to confirm actual email address. Transition plan: forward existing Gmail to Salesforce Email-to-Case routing address. |
+| Do you want email-based case creation? | 📝 AI (High): Yes — primary channel | Currently all support runs through shared Gmail inbox |
+| What support email address(es)? | 📝 AI (Medium): support@relaylogic.com (or similar) | ❓ Needs Discussion: Need actual email address. Transitioning from shared Gmail. |
 
 ### Auto-Response
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What should the automatic confirmation email say when a case is created? | 📝 AI (Perplexity): "Thank you for contacting Relay Logic Support. We've received your request and created Case #{Case Number}: {Subject}. Expected response time: [based on your support tier]. Track your case status or check our help docs at [link]. If urgent, reply directly to this email." | Perplexity: B2B SaaS auto-responses should confirm receipt, set SLA expectations, and offer self-service. |
+| Auto-response email content? | 📝 AI (Perplexity): "Thank you for contacting Relay Logic Support. Your case number is {Case.CaseNumber} has been received. We'll respond within [SLA window based on your plan]. In the meantime, visit our help center at [URL] for common solutions." | Best practice: 3-5 sentences, include case number, set response time expectation, offer self-service link |
 
 ### Email Threading
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Should email conversations stay threaded on the case? | 📝 AI (High): Yes | Critical for Gmail migration — team is used to threaded email conversations. Threading keeps context together. |
+| Should email replies stay threaded on the case? | 📝 AI (Low): Yes | Recommended standard configuration |
 
 ### Case Origin Tracking
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What sources can cases come from? | 📝 AI (High): Email, Phone | AE: Lisa wants to track "how it came in." Start with Email (primary) and Phone. 📝 AI (Perplexity): Also consider Web (if Web-to-Case enabled) and Chat (future/parking lot). |
+| What sources can cases come from? | 📝 AI (High): Email, Phone, Web | Marcus: "Everything comes through email, but we're planning to add a web form... And some customers just call us" |
 
 ---
 
@@ -257,32 +251,35 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you want cases automatically assigned when created or will agents claim from a queue? | 📝 AI (Medium): Combination — auto-assign Platinum/Critical cases directly to senior agents; other cases go to team queue for claiming | AE: Lisa wants "smart routing" for VIP customers. Combination approach gives VIP priority while keeping flexibility for the team. |
+| Automatic assignment or manual queue claiming? | 📝 AI (High): Combination | VIP/Critical cases auto-route to Senior Queue. Product-based cases route to product team queues. Agents claim from their team queue. |
 
 ### Assignment Criteria
 
-*If using automatic assignment:*
-
 | Criteria | Assigned To | Notes |
 |----------|-------------|-------|
-| 📝 AI (High): Customer Tier = Platinum | Senior agent or dedicated queue | AE: "if a high-tier customer has multiple issues going on, that should get flagged and routed to someone senior" |
-| 📝 AI (Medium): Customer Tier = Platinum AND Priority = High/Critical | Marcus (Team Lead) or escalation queue | VIP high-priority cases get immediate senior attention |
-| 📝 AI (Low): Customer Tier = Gold | General Support Queue (priority handling) | Gold customers go to general queue but with elevated priority |
-| 📝 AI (Low): Customer Tier = Silver (or unmatched) | General Support Queue | Standard queue, standard SLA |
+| 📝 AI (High): Product = Core Platform | Core Platform Queue | Marcus's team handles platform issues |
+| 📝 AI (High): Product = Integrations | Integrations Queue | Priya's team handles integrations |
+| 📝 AI (Medium): Product = Analytics Module | ❓ Needs Discussion | New product — which team handles it? |
+| 📝 AI (High): VIP Detection triggered (Gold/Platinum + 2+ open cases) | Senior Support Queue | Override: Critical priority, Senior Queue regardless of product |
+| 📝 AI (High): New Customer (<30 days) | ❓ Needs Discussion — same queue or separate? | Override: High priority, but routing TBD |
 
 ### Queues
 
+| Queue Name | Members | Notes |
+|------------|---------|-------|
+| 📝 AI (High): Core Platform Queue | Marcus Webb, Jake Torres, Anika Patel | Product-based queue for core platform cases |
+| 📝 AI (High): Integrations Queue | Priya Sharma, Sam Okafor, Rachel Kim | Product-based queue for integrations cases |
+| 📝 AI (High): Senior Support Queue | Marcus Webb, Priya Sharma, Jake Torres | Escalated/VIP cases — Lisa: "Route it to the senior queue, not a specific person" |
+
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you need shared queues where multiple agents can claim cases? | 📝 AI (Medium): Yes | Team of 6 agents needs a shared queue for workload distribution |
-| What queues do you need? | 📝 AI (Perplexity): 1. General Support Queue (all agents) 2. VIP / Platinum Queue (senior agents only) 3. Escalation Queue (managers) | Perplexity: B2B SaaS teams of 6-10 typically use 2-3 queues. VIP queue is critical for Relay Logic given the Platinum churn incident. |
-| Should agents be notified when cases are added to their queue? | 📝 AI (Low): Yes | Without notification, agents must manually check — not ideal for SLA enforcement |
+| Should agents be notified when cases are added to their queue? | 📝 AI (Perplexity): Yes | Industry best practice — without notification, agents must manually check queue |
 
 ### Default Case Owner
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Who should be assigned cases that don't match any assignment rules? | 📝 AI (Medium): General Support Queue | Fallback for unmatched cases. Queue ensures nothing gets lost (addresses the "dropping things" problem). |
+| Who gets cases that don't match any rules? | 📝 AI (Medium): Unassigned Cases queue or Lisa Chen | ❓ Needs Discussion: Need fallback owner for unmatched cases |
 
 ---
 
@@ -294,33 +291,32 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What information beyond standard fields do you need to track for customer accounts? | 📝 AI (High): 1. Customer Tier (picklist: Silver, Gold, Platinum) | AE: Tiered customers are core to the routing/escalation model. This field drives assignment rules. |
-| | 📝 AI (Perplexity): 2. Subscription Plan (text or picklist) 3. Contract Start Date / Renewal Date | Perplexity: B2B SaaS companies commonly track subscription info on accounts. ❓ May overlap with future Stripe integration (parking lot). Confirm what's needed now vs. later. |
+| What custom Account fields do you need? | 📝 AI (High): 1. **Customer Tier** (Picklist: Silver, Gold, Platinum) — source for case tier auto-populate 2. **Account Created Date** (Standard field — used for new customer detection <30 days) | Customer Tier on Account is the source of truth. Lisa: "Ideally it'd pull from the account automatically." |
 
 ### Custom Contact Fields
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What information beyond standard fields do you need to track for contacts? | 📝 AI (Low): 1. Preferred Contact Method (picklist: Email, Phone) 2. Role/Department at customer company | Standard B2B contact fields. ❓ Needs Discussion — may not be priority for initial rollout. |
+| What custom Contact fields do you need? | 📝 AI (Low): Standard fields sufficient (Name, Email, Phone, Title) | No specific contact field requirements mentioned in discovery |
 
 ### Account Hierarchy
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you have parent company and subsidiary relationships that need to be tracked? | ❓ Needs Discussion | 📝 AI (Medium): Likely not critical for initial setup. Relay Logic sells to mid-market ops teams — probably direct accounts, not complex hierarchies. |
+| Do you need parent-child account relationships? | 📝 AI (Medium): Unlikely | Not mentioned; B2B SaaS selling to mid-market ops teams doesn't typically require hierarchy |
 
 ### Contacts to Multiple Accounts
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Can one contact work with multiple customer accounts? | ✅ Confirmed: No | Contacts are only associated to one account. |
+| Can one contact work with multiple accounts? | 📝 AI (Low): No | Not mentioned; standard single-account relationship sufficient |
 
 ### Required Fields
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Which Account fields should be required? | 📝 AI (Medium): Customer Tier, Account Name | Customer Tier is required for routing logic to work |
-| Which Contact fields should be required? | 📝 AI (Low): Email | Email is required for Email-to-Case matching |
+| Required Account fields? | 📝 AI (Medium): Customer Tier | Critical for SLA and routing logic |
+| Required Contact fields? | 📝 AI (Low): Email | Standard best practice for case communication |
 
 ---
 
@@ -332,26 +328,26 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What email system do your agents use? | 📝 AI (High): Gmail | AE: "running everything through a shared Gmail inbox." Gmail Integration and Sync included in Enable tier. |
+| What email system do agents use? | 📝 AI (High): Gmail | Currently using shared Gmail inbox; Gmail integration included in Service Cloud |
 
 ### Email Templates
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What email templates should be available to agents? | 📝 AI (Perplexity): 1. Case Acknowledgment (auto-response) 2. Request More Information 3. Case Resolved / Solution Provided 4. Escalation Notification (internal) 5. Case Follow-Up (post-resolution) | Perplexity: Top 5 templates for B2B SaaS support. Limit of 10 for Enable tier — start with 5 core templates, add more as needed. ❓ Confirm with Lisa/Marcus which templates they use most often via email today. |
+| What templates should be available? | 📝 AI (Perplexity): 1. Case Auto-Response (new case acknowledgment) 2. Case Resolved (resolution notification) 3. Request More Information (ask customer for details) 4. Escalation Notification (internal — VIP alert) 5. Initial Response (first agent reply) | B2B SaaS standard templates. Up to 10 allowed; start with 5 essential ones. |
 
 ### Organization-Wide Email Address
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What email address should appear as the sender when agents email customers from Salesforce? | 📝 AI (Medium): support@relaylogic.com | ❓ Confirm actual email address. This should match their current support email for customer continuity. Requires domain verification with IT. |
+| What sender email address? | ❓ Needs Discussion | Need to determine the support@ address. Currently using shared Gmail — may reuse or create new. |
 
 ### Email Signature
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do you need a standard email signature on all outbound emails? | 📝 AI (Low): Yes | Standard practice for professional B2B communication |
-| If yes, what should it include? | ❓ Needs Discussion | Typically: Company name, support hours, help center link |
+| Standard email signature? | 📝 AI (Low): Yes | Recommended: Company name, support hours, help center link |
+| What should it include? | ❓ Needs Discussion | |
 
 ---
 
@@ -363,59 +359,62 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What types of tasks do agents typically create? | 📝 AI (Low): 1. Follow up with customer 2. Escalate to engineering 3. Internal review / investigation 4. Post-resolution check-in | Standard support task types. ❓ Confirm with Marcus what follow-up actions the team performs today. |
+| What task types do agents create? | 📝 AI (High): 1. Initial Response Required 2. Follow-Up Required 3. Escalation Follow-Up | Lisa: "Auto-create a task for the assigned agent. Something like 'Initial Response Required.'" Marcus: "If there was a task or a reminder created automatically... that'd be amazing." |
 
 ### Activity Reminders
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Should agents receive automatic reminders before tasks are due? | 📝 AI (Low): Yes | Helps prevent dropped follow-ups — directly addresses their current pain point of "things getting dropped." |
+| Automatic reminders before tasks are due? | 📝 AI (Medium): Yes | Aligns with Lisa's emphasis on timely follow-up and SLA compliance |
 
 ---
 
 ## Section 10: Automation
 
-*Business rules that happen automatically.*
+*Business rules that happen automatically. Enable tier allows up to 3 record-triggered flows.*
 
 ### Automated Actions
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Beyond automatic assignment and escalation, do you need any other automated actions? | 📝 AI (Medium): Yes — see below | Limit of 3 automations for Enable tier |
+| Do you need automated actions beyond assignment/escalation? | 📝 AI (High): Yes — 3 automations (at Enable tier limit) | All 3 flow slots used |
 
-*Suggested automations based on discovery:*
+**Flow 1: VIP Case Detection**
 
-| Automation 1 | Details |
-|--------------|---------|
-| What triggers it? | 📝 AI (High): Platinum customer has 3+ open cases simultaneously |
-| What happens? | 📝 AI (High): Flag account, notify Marcus (Team Lead) and Lisa (VP), escalate all open cases to VIP queue |
-| Notes | AE: "if a high-tier customer has multiple issues going on, that should get flagged and routed to someone senior." This is Lisa's #1 request — the Platinum churn incident. Uses 1 of 3 flow slots. |
+| Detail | Value | Notes |
+|--------|-------|-------|
+| What triggers it? | 📝 AI (High): New case created where Account Customer Tier = Gold or Platinum AND Account has 2+ open cases (including the new one) | Lisa: "If they have two or more open cases including the new one" |
+| What happens? | 📝 AI (High): 1. Set Priority = Critical 2. Reassign to Senior Support Queue 3. Post Chatter notification: "VIP Alert: [Tier] customer [Account Name] with [X] open cases — routed to Senior Queue" | Lisa: "Bumped to critical priority and routed to our senior agents" + Chatter post request |
 
-| Automation 2 | Details |
-|--------------|---------|
-| What triggers it? | 📝 AI (Perplexity): Case status is "Waiting on Customer" for 7+ days with no response |
-| What happens? | 📝 AI (Perplexity): Auto-close case, send notification to customer, create follow-up task for agent |
-| Notes | Perplexity: Standard B2B SaaS auto-close workflow. Prevents stale cases from cluttering queues. |
+**Flow 2: New Customer Priority Boost**
 
-| Automation 3 | Details |
-|--------------|---------|
-| What triggers it? | 📝 AI (Perplexity): Case marked as "Resolved" |
-| What happens? | 📝 AI (Perplexity): Create follow-up task for agent to check in with customer after 3 business days |
-| Notes | Perplexity: Post-resolution follow-up improves CSAT and catches re-opened issues early. |
+| Detail | Value | Notes |
+|--------|-------|-------|
+| What triggers it? | 📝 AI (High): New case created where Account Created Date is within last 30 days | Lisa: "When an account is brand new — say within their first 30 days" |
+| What happens? | 📝 AI (High): Set Priority = High (unless already Critical from VIP detection — VIP takes precedence) | Lisa: "If they're both new AND VIP with multiple cases, the VIP rule should win" |
+
+**Flow 3: Auto-Create Follow-Up Task**
+
+| Detail | Value | Notes |
+|--------|-------|-------|
+| What triggers it? | 📝 AI (High): New case created (after assignment) | Lisa: "Auto-create a task for the assigned agent" |
+| What happens? | 📝 AI (High): Create Task "Initial Response Required" assigned to case owner. Due date based on priority: Critical = today, High = tomorrow, Medium = 3 business days, Low = 5 business days | Lisa: "Make the due date reflect the priority. Critical cases — that task should be due today. High priority — maybe tomorrow. Normal — a few days out." |
+
+⚠️ **Note:** All 3 flow slots for Enable tier are used. Any additional automation would require an Elevate tier upgrade.
 
 ---
 
 ## Section 11: Reports & Dashboards
 
-*Tracking key metrics and performance.*
+*Tracking key metrics and performance. Enable tier includes 1 custom dashboard with 5 custom reports.*
 
 ### Dashboard Metrics
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What are the top 5 metrics your support team needs to track daily? | 📝 AI (Perplexity): 1. Open cases by priority and customer tier 2. Average first response time by tier (SLA compliance) 3. Escalated cases count (current) 4. Cases by product/module (volume distribution) 5. Agent caseload / cases per agent | Perplexity: Top metrics for a VP of Customer Success at B2B SaaS. #1 and #2 directly address Lisa's VIP handling concern. #4 addresses her product tracking requirement. |
+| Top 5 metrics to track? | 📝 AI (Perplexity): 1. **Open Cases by Priority** — Real-time view of Critical/High/Medium/Low backlog 2. **Cases by Product** — Volume split across Core Platform, Integrations, Analytics Module 3. **Average First Response Time by Tier** — SLA compliance tracking (Platinum <2hr, Gold <4hr, Silver <NBD) 4. **VIP Alert Cases (This Week)** — Count of cases that triggered VIP detection 5. **Cases by Agent** — Workload distribution across team | Industry best practice for B2B SaaS: focus on SLA compliance, volume by segment, and agent productivity. Lisa needs full visibility as VP. |
 
-*Note: Standard reports (case volume, aging, resolution times, queue status, agent productivity) are included out-of-the-box. The 5 custom reports above go on the 1 custom dashboard included in Enable tier.*
+*Standard reports (case volume, aging, resolution times, queue status, agent productivity) are included out-of-the-box.*
 
 ---
 
@@ -427,34 +426,43 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Do your support agents need to access and update cases while away from their desk? | ❓ Needs Discussion | Not mentioned in handoff call. 📝 AI (Low): Likely yes for managers (Lisa/Marcus) to monitor escalations on the go. |
+| Do agents need mobile case access? | 📝 AI (Medium): Yes — basic access | Not explicitly discussed, but B2B SaaS teams typically need mobile for off-hours incident response. Standard mobile app is out-of-the-box. |
 
 ---
 
 ## Section 13: Security & Access
 
-*Who can see and do what.*
+*Who can see and do what. This section is critical for Relay Logic's team separation requirement.*
 
 ### Organization-Wide Defaults (Record Access)
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Who should be able to see cases by default? | 📝 AI (Medium): Public Read Only — all agents can view all cases, but only owner/assigned agent can edit | Team of 6 agents working from shared queue — they need visibility to claim and collaborate. Read-only prevents accidental edits. |
-| Who should be able to see accounts by default? | 📝 AI (Medium): Public Read Only | Agents need to see customer tier and account info to handle cases properly. |
-| Who should be able to see contacts by default? | 📝 AI (Medium): Public Read Only | Same rationale — agents need contact info for case handling. |
+| Case OWD | 📝 AI (High): **Private** | Lisa: Agents should "only see their own stuff and cases in their team's queue." Marcus: "We don't want agents accidentally working cases that belong to the other team." |
+| Account OWD | 📝 AI (Medium): Public Read Only | All agents need to see account info (customer tier, etc.) for case context, but ownership stays with assigned rep |
+| Contact OWD | 📝 AI (Medium): Public Read Only | Same reasoning as Accounts — agents need contact info for cases |
 
 ### Sharing Rules
 
-| Question | Your Answer | Notes |
-|----------|-------------|-------|
-| How should private records be shared across the team? | 📝 AI (Medium): N/A if OWD is Public Read Only | If OWD stays Public Read Only, sharing rules are not needed. If client wants Private OWD, we'll need role-based sharing rules (managers see all, agents see their own + queue). |
+*Since Case OWD is Private, sharing rules grant access:*
+
+| Sharing Rule | What It Does | Notes |
+|--------------|--------------|-------|
+| 📝 AI (High): Role-based — Team Leads see their team's cases | Marcus sees cases owned by Jake & Anika; Priya sees Sam & Rachel's cases | Marcus: "Just my team's for me. Priya sees hers." |
+| 📝 AI (High): Role-based — Lisa (VP) sees ALL cases | VP role at top of hierarchy grants full visibility | Lisa: "I need to see everything — all the cases, all the metrics" |
+| 📝 AI (High): Queue-based sharing | Queue members can see/claim cases in their queue | Enables agents to work from their team queue |
 
 ### Field-Level Security
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| Are there any sensitive fields that certain users should not see or edit? | ❓ Needs Discussion | 📝 AI (Low): Possible — internal notes field visible only to managers. Customer tier field editable only by managers (prevents agents from changing tier). |
-| If yes, which fields and for which users? | ❓ Needs Discussion | |
+| Sensitive fields to restrict? | 📝 AI (Medium): No specific restrictions identified | Lisa's main concern was delete prevention, not field visibility. No sensitive fields mentioned. |
+
+### Delete Prevention
+
+| Question | Your Answer | Notes |
+|----------|-------------|-------|
+| Who can delete cases? | 📝 AI (High): Nobody — no case deletion | Lisa: "No. Absolutely not. Nobody deletes anything." Configure via Profile permissions. |
 
 ---
 
@@ -466,22 +474,22 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Question | Your Answer | Notes |
 |----------|-------------|-------|
-| What branding should be applied to the Salesforce interface? | ❓ Needs Discussion | Standard: company logo + brand colors |
-| Do you have a logo file ready? | ❓ Needs Discussion | PNG or SVG format preferred |
-| What are your primary brand colors? | ❓ Needs Discussion | Hex codes needed |
+| Branding to apply? | ❓ Needs Discussion | Not discussed in discovery |
+| Logo file ready? | ❓ Needs Discussion | |
+| Brand colors? | ❓ Needs Discussion | |
 
 ---
 
 ## Parking Lot
 
-*Items that came up but are out of scope for Enable tier. We'll discuss tier upgrades if needed.*
+*Items that came up but are out of scope for Enable tier.*
 
-| Item | Why It's Out of Scope | Notes | Suggested Tier |
-|------|----------------------|-------|----------------|
-| Customer Portal | Customer Community/Portal is a Transform tier feature. Requires Experience Cloud setup, guest user profiles, and ongoing maintenance. | AE: "Lisa asked about a customer portal — somewhere customers could log in and see their tickets." Lisa was fine parking this for phase 2. | Transform ($60K) |
-| Stripe Billing Integration | External system integration (API/middleware) is beyond Enable scope. Would require custom Apex or middleware like MuleSoft. | AE: "they use Stripe for billing, so she mentioned wanting to see subscription data in Salesforce at some point." Lisa was fine with phase 2. | Elevate ($35K) or Transform ($60K) |
-| Skills-Based Routing | Requires Omni-Channel, which is an Elevate+ feature. Enable tier uses criteria-based assignment rules. | Not explicitly requested, but "smart routing" aspirations may evolve into this need. | Elevate ($35K) |
-| Knowledge Base / Help Center | Knowledge Management is an Elevate+ feature. Includes articles, categories, publishing workflows. | Not mentioned in handoff call, but common request once support is structured. May come up in discovery. | Elevate ($35K) |
+| Item | Notes | Source | Suggested Tier |
+|------|-------|--------|----------------|
+| Customer Portal | Self-service case submission and tracking. Lisa: "Somewhere customers can log in, see their cases, maybe submit new ones" | Discovery transcript — Lisa Chen | Transform ($60K) |
+| Stripe Integration | Surface billing/subscription data in Salesforce. Lisa: "We use Stripe — it'd be great if we could see subscription info" | Discovery transcript — Lisa Chen | Custom Integration (separate scoping) |
+| Email Notifications for VIP | Marcus suggested starting with Chatter only; revisit email alerts if Chatter adoption is low | Discovery transcript — Marcus Webb | Phase 2 (same tier) |
+| Advanced SLA Tracking | Formal entitlements with milestones and SLA violation workflows | Not requested, but may emerge as SLA needs mature | Elevate ($35K) |
 
 ---
 
@@ -489,50 +497,51 @@ This worksheet has been pre-filled using information from the AE handoff call wi
 
 | Version | Date | Inputs | Key Changes |
 |---------|------|--------|-------------|
-| v1 | 2026-03-02 | AE handoff transcript (Jordan Park, Feb 25, 2026) | Initial AI pre-fill from sales handoff call |
+| v1 | 2026-03-05 | Sales handoff transcript (2026-02-25), Discovery call transcript (2026-03-02) | Initial AI pre-fill from two transcripts |
+
+---
 
 ## Research Notes (Perplexity)
 
 ### Industry Context: B2B SaaS (Workflow Automation)
 
 **Typical Support Characteristics:**
-- B2B SaaS support teams commonly use tiered models (Silver/Gold/Platinum) with differentiated SLAs
-- Common case types: Bug reports (highest volume), integration/API issues, billing questions, feature requests, onboarding
-- Mid-market SaaS companies (200 employees) typically have 6-10 support agents
-- Average first response time targets: Platinum 30-60 min, Gold 2-4 hours, Silver 8-24 hours
+- B2B SaaS support teams typically serve tiered customer segments with differentiated SLAs
+- First Response Time (FRT) is the most critical metric — sub-1-hour for critical issues is industry standard
+- Customer Retention Rate and Churn Rate are closely tied to support quality
+- CSAT benchmark for B2B SaaS is >85%
+- Tiered support models (Silver/Gold/Platinum) are common and align with Relay Logic's structure
 
-**Industry-Specific Considerations:**
-- Workflow automation products generate high integration-related support volume (API errors, connector issues)
-- B2B SaaS customers expect email-based support as primary channel
-- Multi-case detection (3+ open per account) is a standard escalation trigger
-- Post-resolution follow-up (3-5 business days) is standard practice for SaaS retention
+**Key Metrics That Matter:**
+- SLA Compliance Rate (target >95%)
+- First Response Time by tier
+- Average Resolution Time
+- First Contact Resolution Rate
+- Case Volume by Product/Channel
+- Customer Satisfaction Score (CSAT)
 
 ### Section-Specific Validation
 
 **Case Management (Section 4):**
-- Query: "Salesforce case types and statuses for B2B SaaS workflow automation companies"
-- Key findings: Standard case types (Technical, Integration, Billing, Feature Request, General) align with SaaS norms. "Waiting on Customer" status is essential for SLA timer pausing.
+- Query: "Salesforce case management stages and SLA best practices for B2B SaaS"
+- Key findings applied: Added "Waiting on Customer" status to pause SLA timers; validated Critical/High/Medium/Low priority alignment; escalation thresholds based on B2B SaaS norms
 
 **Case Capture (Section 5):**
-- Query: "Web-to-Case and Email-to-Case best practices for B2B SaaS companies"
-- Key findings: Email-to-Case is primary channel for B2B. Web form should have 7-10 fields max. Auto-response should include case number, SLA expectation, and self-service link.
+- Query: "Web-to-Case form fields best practices B2B SaaS"
+- Key findings applied: Recommended lean form (5-7 fields); auto-response template with case number, expected response time, and self-service link
 
 **Case Assignment & Routing (Section 6):**
-- Query: "Case assignment and queue structure for mid-market SaaS support teams"
-- Key findings: 2-3 queues optimal for 6-10 agents. Tier-based routing (Platinum direct to VIP queue, others to general). Combination of auto-assign (VIP) and queue claiming (standard).
-
-**Escalation Rules (Section 4):**
-- Query: "Escalation rules and SLA best practices for B2B SaaS tiered support"
-- Key findings: Escalation thresholds scale by both priority and customer tier. Platinum Critical: 15-30 min. Gold High: 2-3 hours. Multi-case detection (3+ per account) should auto-escalate.
+- Query: "Case assignment routing best practices B2B SaaS"
+- Key findings applied: Product-based routing + tier-based escalation is standard; queue structure should match team specialization; recommended queue notification
 
 **Reports & Dashboards (Section 11):**
-- Query: "Support dashboard KPIs for B2B SaaS VP of Customer Success"
-- Key findings: Top 5 metrics: Open cases by priority/tier, first response time by tier (SLA compliance), escalated case count, cases by product, agent caseload. CSAT/NPS important but may not be tracked in Enable tier.
+- Query: "Service Cloud dashboard KPIs for B2B SaaS support teams"
+- Key findings applied: Prioritized SLA compliance, volume by product, first response time by tier, VIP alerts, and agent workload distribution
 
 ---
 
 **Document Status:** AI Pre-filled (Ready for Consultant Review)
-**Generated:** 2026-03-02
-**Sources:** AE Handoff Transcript — Jordan Park to Consultant (Feb 25, 2026)
+**Generated:** 2026-03-05
+**Sources:** Sales handoff transcript (2026-02-25), Discovery call transcript (2026-03-02)
 **Template Used:** service-cloud-enable-worksheet-template.md
 **Scope File:** service-cloud/tiers/enable.md
