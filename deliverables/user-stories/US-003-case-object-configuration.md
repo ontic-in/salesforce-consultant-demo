@@ -1,125 +1,120 @@
 # US-003: Case Object Configuration
 
-**Status:** [x] Verified
+**Status:** [ ] Not Started
 
 ## Business Requirement
 
-Relay Logic needs the Case object configured to track support requests with product tagging, customer tier visibility, and priority-based workflows. Every case must have a product tagged (Core Platform, Integrations, or Analytics Module). Customer Tier should be visible on the case for agent context. Standard priorities (Low, Medium, High, Critical) are confirmed. Case statuses need to support a "Waiting on Customer" state beyond the standard set.
+Relay Logic needs the Case object configured with the right statuses, priorities, custom fields, and page layouts to support their product-based support model. Every case must have a Product tagged, and Customer Tier should auto-populate from the Account. The "Critical" priority level is needed for VIP detection, and "Waiting on Customer" status is needed to pause SLA tracking.
 
 ## Worksheet References
-- Section 4, Case Types: *"📝 AI (Perplexity): Technical Issue / Bug Report, Integration / API Issue, Billing Question, Feature Request, General Inquiry"* — Confirmed by consultant
-- Section 4, Case Statuses: *"📝 AI (Perplexity): New, In Progress, Waiting on Customer, Escalated, Resolved, Closed"*
-- Section 4, Case Priorities: *"✅ Confirmed: Yes — standard (Low, Medium, High, Critical)"*
-- Section 4, Product Field: *"✅ Confirmed: Product / Module (picklist: Core Platform, Integrations, Analytics Module) — REQUIRED"*
-- Section 4, Customer Tier on Case: *"✅ Confirmed: Customer Tier (picklist: Silver, Gold, Platinum — from Account)"*
-- Section 4, Case Origin: *"✅ Confirmed: Case Origin (standard field — Email, Phone, Web)"*
-- Section 4, Required Fields: *"✅ Confirmed: Product / Module (required), Case Type, Priority, Customer Contact, Description"*
+- Section 4, Case Types: *"Technical Issue, Product Question, Feature Request, Bug Report"*
+- Section 4, Case Statuses: *"Add 'Waiting on Customer' to pause SLA timers"*
+- Section 4, Case Priorities: *"Low, Medium, High, Critical — Critical for VIP cases"*
+- Section 4, Custom Fields: *"Product (Picklist: Core Platform, Integrations, Analytics Module) — REQUIRED. Customer Tier (Picklist: Silver, Gold, Platinum)"*
+- Section 4, Required Fields: *"Product, Contact, Description — Lisa was emphatic about Product being required"*
+- Section 5, Case Origin: *"Email, Phone, Web"*
 
 ## Solution Design
 
-**Custom Case Fields:**
+### Case Statuses (StandardValueSet: CaseStatus)
 
-| Field | API Name | Type | Values | Required | Purpose |
-|-------|----------|------|--------|----------|---------|
-| Product / Module | Product_Line__c | Picklist | Core Platform, Integrations, Analytics Module | Yes | Product-based routing, reporting, queue assignment |
-| Customer Tier | Customer_Tier__c | Formula (Text) | — | N/A (formula) | Pulls tier from Account automatically. Lisa: "Ideally it'd pull from the account automatically." |
+| Status | IsClosed | Exists in Org | Action |
+|---|---|---|---|
+| New | No | Yes | No change |
+| In Progress | No | Yes | No change |
+| Waiting on Customer | No | Yes | **No Gap** — already configured |
+| Escalated | No | Yes | No change |
+| Closed | Yes | Yes | No change |
 
-**Design Decisions:**
-> **Decision:** Customer Tier on Case is a formula field (`Account.Customer_Tier__c`) rather than a picklist.
-> **Rationale:** Lisa wants it to "pull from the account automatically." A formula field ensures tier is always in sync with the Account and agents cannot override it on cases. This also simplifies data integrity — no risk of mismatched tier values between Account and Case.
+> **Org Analysis:** All required statuses already exist. No SVS deployment needed.
 
-> **Decision:** Use `Product_Line__c` as the API name (not `Product__c`).
-> **Rationale:** `Product` is a standard Salesforce object name. Using `Product_Line__c` avoids potential naming conflicts and is more descriptive of Relay Logic's use case (product lines, not products in the CPQ sense).
+### Case Priorities (StandardValueSet: CasePriority)
 
-> **Decision:** Case statuses include "Waiting on Customer" and "Resolved" beyond the standard set.
-> **Rationale:** "Waiting on Customer" is standard for B2B SaaS to pause SLA timers (Perplexity-validated). "Resolved" separates agent resolution from formal closure, allowing for customer confirmation before closing.
+| Priority | Exists in Org | Action |
+|---|---|---|
+| Low | Yes | No change |
+| Medium | Yes (default) | No change |
+| High | Yes | No change |
+| Critical | **No** | **Create** — needed for VIP detection flow |
 
-> **Decision:** No Record Types for Case — single case process for all product lines.
-> **Rationale:** Product differentiation is handled by the `Product_Line__c` picklist and assignment rules. Record Types add complexity without a clear business need at this stage.
+> **Gap:** Critical priority must be added. SVS deploy is full replacement — retrieve first, add Critical, redeploy.
 
-**Case Statuses:**
+### Custom Case Fields
 
-| Status | Category | Notes |
-|--------|----------|-------|
-| New | New | Default for new cases |
-| In Progress | Working | Agent is actively working |
-| Waiting on Customer | Working | Awaiting customer response |
-| Escalated | Working | Case has been escalated |
-| Resolved | Closed | Agent resolved, pending confirmation |
-| Closed | Closed | Fully closed |
+| Field API Name | Label | Type | Values | Required | Purpose |
+|---|---|---|---|---|---|
+| Product__c | Product | Picklist | Core Platform, Integrations, Analytics Module | Yes (page layout) | Product routing, queue assignment, reporting |
+| Customer_Tier__c | Customer Tier | Picklist | Silver, Gold, Platinum | No | Auto-populated from Account via Flow (US-008); used for VIP detection |
 
-**Case Types:**
+> **Design Decision:** Use `Product__c` (new field) instead of existing `Product_Line__c`
+> **Rationale:** `Product_Line__c` contains manufacturing values (Fiber, Chemical, Base, Coating) from SDO data. Creating a clean `Product__c` field avoids value conflicts and confusion.
 
-| Type | Notes |
-|------|-------|
-| Technical Issue / Bug Report | Core platform and product bugs |
-| Integration / API Issue | Integration product issues |
-| Billing Question | Billing inquiries (Stripe-related) |
-| Feature Request | Enhancement requests |
-| General Inquiry | Catch-all |
+> **Design Decision:** Case Type as a picklist field, not Record Types
+> **Rationale:** All case types follow the same process (statuses, layouts). Record types add complexity (business processes, layout assignments) with no benefit for Relay Logic's needs. A simple Type picklist achieves categorization without overhead.
 
-**Page Layout — Key sections:**
-- Case Information: Subject, Status, Priority, Product_Line__c, Customer_Tier__c (formula, read-only), Case Origin, Type
-- Contact Information: Contact Name, Account Name
-- Description: Description
-- Related Lists: Activities, Case Comments, Emails
+### Case Origin (Standard Field)
 
-**List Views:**
+Standard Case Origin field already exists with Email, Phone, Web values. Verify values are present; add if missing.
 
-| List View | Filter | Shared To | Purpose |
-|-----------|--------|-----------|---------|
-| My Open Cases | Owner = current user, Status != Closed | All Internal Users | Agent's personal queue |
-| All Open Cases | Status != Closed | All Internal Users | Manager overview (visibility controlled by OWD + sharing rules) |
-| Core Platform Cases | Product_Line__c = "Core Platform", Status != Closed | All Internal Users | Core Platform team view |
-| Integrations Cases | Product_Line__c = "Integrations", Status != Closed | All Internal Users | Integrations team view |
-| High Priority Cases | Priority = High OR Critical, Status != Closed | All Internal Users | Escalation monitoring |
+**Org Analysis Findings:**
+
+| Item | Current State | Gap | Action |
+|---|---|---|---|
+| Case statuses | New, In Progress, Waiting on Customer, Escalated, Closed | No gap | — |
+| Case priorities | High, Medium (default), Low | Missing Critical | Add via SVS deploy |
+| Product__c | Does not exist | Create | Create custom picklist |
+| Customer_Tier__c (Case) | Does not exist | Create | Create custom picklist |
+| Product_Line__c | Exists (SDO data — Fiber, Chemical, etc.) | Not usable | Ignore — create Product__c |
+| Case page layout | Default SDO layout exists | Needs customization | Update |
 
 ## Feature Assumptions (What We're NOT Configuring)
 
 | Feature | Rationale |
-|---------|-----------|
-| Affected Workflow ID field | `📝 AI (Perplexity)` suggestion from v1. Not discussed in discovery. |
-| Record Types for Case | Not required — single case process for all product lines. Confirmed by consultant. |
-| Business Process for Case | Not needed without Record Types |
-| Validation Rules | Not confirmed as needed. Required fields handle data quality for now. |
-| Compact Layout | Using default compact layout |
+|---|---|
+| Case Record Types | Not needed — single process for all case types; picklist field sufficient |
+| Business Processes | Not needed — no record types |
+| Case Teams | Not discussed in discovery |
+| Case Milestones/Entitlements | Out of scope — Elevate tier feature |
+| Validation Rules | Not discussed; may add in future stories if needed |
+| Compact Layouts | Standard compact layout sufficient for now |
+| Case Comments custom fields | Standard case comments sufficient |
 
 ## Implementation Checklist
 
-**Deploy Custom Fields:**
-- [ ] Retrieve existing Case object metadata for XML reference
-- [ ] Create `Product_Line__c` picklist field (values: Core Platform, Integrations, Analytics Module; required)
-- [ ] Create `Customer_Tier__c` formula field (Text): `TEXT(Account.Customer_Tier__c)` — read-only by nature
-- [ ] Deploy both fields to org
+### Phase 1: Standard Value Sets
 
-**Configure Case Statuses:**
-- [ ] Retrieve `StandardValueSet:CaseStatus` to see existing values
-- [ ] Add "Waiting on Customer" status (category: Working) if not present
-- [ ] Add "Resolved" status (category: Closed) if not present
-- [ ] Deploy StandardValueSet update (note: deploy is FULL REPLACEMENT — include all existing values)
+- [ ] Retrieve current CasePriority SVS: `sf project retrieve start --metadata "StandardValueSet:CasePriority"`
+- [ ] Add "Critical" value to CasePriority SVS XML (preserve existing High, Medium, Low values — SVS deploy is full replacement)
+- [ ] Deploy updated CasePriority: `sf project deploy start --source-dir force-app/main/default/standardValueSets/CasePriority.standardValueSet-meta.xml`
+- [ ] Verify: `SELECT MasterLabel, SortOrder FROM CasePriority ORDER BY SortOrder`
+- [ ] Verify Case Origin has Email, Phone, Web values (retrieve and check)
 
-**Configure Case Types:**
-- [ ] Retrieve `StandardValueSet:CaseType` to see existing values
-- [ ] Set case type values: Technical Issue / Bug Report, Integration / API Issue, Billing Question, Feature Request, General Inquiry
-- [ ] Deploy StandardValueSet update
+### Phase 2: Custom Fields
 
-**Secure & Make Usable:**
-- [ ] Deploy Permission Set `Case_Custom_Fields` with FLS: read/edit on `Product_Line__c`; read-only on `Customer_Tier__c` (formula fields must be `editable: false`)
-- [ ] Assign Permission Set to all 7 users
-- [ ] Retrieve Case page layout
-- [ ] Add `Product_Line__c`, `Customer_Tier__c`, Case Origin, Type to Case page layout
-- [ ] Set `Product_Line__c` behavior to `Required` on page layout
-- [ ] Deploy updated page layout
+- [ ] Create `Product__c` picklist field metadata at `force-app/main/default/objects/Case/fields/Product__c.field-meta.xml` with values: Core Platform, Integrations, Analytics Module
+- [ ] Create `Customer_Tier__c` picklist field metadata at `force-app/main/default/objects/Case/fields/Customer_Tier__c.field-meta.xml` with values: Silver, Gold, Platinum
+- [ ] Deploy both fields: `sf project deploy start --source-dir force-app/main/default/objects/Case/fields`
+- [ ] Verify fields exist: `SELECT Product__c, Customer_Tier__c FROM Case LIMIT 1`
 
-**Create List Views:**
-- [ ] Create 5 list views: My Open Cases, All Open Cases, Core Platform Cases, Integrations Cases, High Priority Cases
-- [ ] Set `<sharedTo><allInternalUsers>` on all list views
-- [ ] Deploy list views to org
+### Phase 3: Field-Level Security (Required — new fields get zero FLS)
 
-**Verify:**
-- [ ] Query `SELECT Product_Line__c, Customer_Tier__c FROM Case LIMIT 1` to confirm fields exist
-- [ ] Verify FLS via `FieldPermissions` SOQL query
-- [ ] Test: Create a Case on an Account with Customer Tier = Gold — confirm formula shows "Gold" on Case
-- [ ] Test: Confirm Product / Module is required when creating a case
-- [ ] Test: Verify all 5 list views appear and filter correctly
+- [ ] Create Permission Set `Case_Custom_Fields_Access` with FLS for both `Case.Product__c` and `Case.Customer_Tier__c` (read + edit)
+- [ ] Deploy permission set: `sf project deploy start --source-dir force-app/main/default/permissionsets/Case_Custom_Fields_Access.permissionset-meta.xml`
+- [ ] Assign to all Relay Logic users: `sf org assign permset --name Case_Custom_Fields_Access`
+- [ ] Verify FLS: `SELECT Field, PermissionsRead, PermissionsEdit FROM FieldPermissions WHERE Field IN ('Case.Product__c','Case.Customer_Tier__c')`
+
+### Phase 4: Page Layout
+
+- [ ] Retrieve current Case page layout: `sf project retrieve start --metadata "Layout:Case-Case Layout"`
+- [ ] Add `Product__c` to Case Information section — mark as required on layout
+- [ ] Add `Customer_Tier__c` to Case Information section — read-only (auto-populated by Flow)
+- [ ] Ensure standard fields are present: Contact, Subject, Description, Status, Priority, Case Origin, Type
+- [ ] Deploy updated layout: `sf project deploy start --source-dir force-app/main/default/layouts`
+- [ ] Verify layout assignment to Service_Cloud_Agent profile
+
+### Secure & Make Usable
+
+- [ ] Test: Create a Case → verify Product is required, Customer Tier is visible
+- [ ] Test: Verify Critical priority appears in picklist
+- [ ] Test: Verify all 5 statuses appear in Status picklist
 - [ ] User verification with client
