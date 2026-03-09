@@ -4,61 +4,103 @@
 
 ## Business Requirement
 
-Relay Logic uses a tiered customer model (Silver, Gold, Platinum) that drives SLA response times, case priority, VIP detection, and escalation rules. The Customer Tier field must exist on the Account object and be required — it's the foundation for downstream automation and routing. An Account Start Date is also needed to power the "new customer within 30 days" auto-prioritization flow (US-004).
+Relay Logic needs a Customer Tier field on Accounts to drive SLA prioritization, VIP detection, and routing logic. The tier (Silver/Gold/Platinum) is the source of truth for case priority and queue assignment automation. Basic duplicate prevention is needed for Accounts (by name) and Contacts (by email) to maintain data quality as the team transitions from a shared Gmail inbox.
 
 ## Worksheet References
-- Section 7, Customer Tier: *"✅ Confirmed: Customer Tier (picklist: Silver, Gold, Platinum)"*
-- Section 7, Required Fields: *"✅ Confirmed: Customer Tier, Account Name"*
-- Section 7, Account Start Date: *"📝 AI (Medium): Account Start Date (date — for 'new customer' 30-day rule)"*
-- Section 7, Contacts to Multiple Accounts: *"✅ Confirmed: No"*
-- Section 4, SLA by Tier: *"✅ Confirmed: Platinum 2h, Gold 4h, Silver next business day"*
-- Section 10, Automation 2: *"✅ Confirmed: Case created on an account that is less than 30 days old"*
+- Section 7, Custom Account Fields: *"Customer Tier (Picklist: Silver, Gold, Platinum) — source for case tier auto-populate"*
+- Section 7, Required Account Fields: *"Customer Tier — Critical for SLA and routing logic"*
+- Section 7, Required Contact Fields: *"Email — Standard best practice for case communication"*
+- Section 7, Custom Contact Fields: *"Standard fields sufficient (Name, Email, Phone, Title)"*
+- Section 3, Duplicate Prevention: *"Block duplicate Contacts by email, Alert on duplicate Accounts by name"*
+- Section 7, Account Hierarchy: *"Unlikely — not required"*
+- Section 7, Contacts to Multiple Accounts: *"No — standard single-account relationship sufficient"*
 
 ## Solution Design
 
-**Custom Account Fields:**
+### Custom Account Fields
 
-| Field | API Name | Type | Values | Required | Purpose |
-|-------|----------|------|--------|----------|---------|
-| Customer Tier | Customer_Tier__c | Picklist | Silver, Gold, Platinum | Yes | Drives SLAs, VIP detection, escalation rules, case priority |
-| Account Start Date | Account_Start_Date__c | Date | — | No | Powers 30-day new customer prioritization (US-004 Automation 2) |
+| Field API Name | Label | Type | Values | Required | Purpose |
+|---|---|---|---|---|---|
+| Customer_Tier__c | Customer Tier | Picklist | Silver, Gold, Platinum | Yes (page layout) | Source of truth for SLA tiers; auto-populates on Cases via Flow (US-008); drives VIP detection |
 
-**Design Decisions:**
-> **Decision:** Use a custom `Account_Start_Date__c` field rather than the standard `CreatedDate` on Account.
-> **Rationale:** `CreatedDate` reflects when the record was created in Salesforce, not when the customer relationship started. Since Relay Logic is migrating from Gmail, accounts will be created during setup — `CreatedDate` would make every account look "new." A custom date field lets them backfill actual start dates.
+> **Design Decision:** Make Customer Tier required via page layout, not field metadata
+> **Rationale:** Metadata-level `<required>true</required>` conflicts with FLS deployment (cannot deploy FLS for required fields). Page layout required achieves the same UX enforcement without the deployment conflict.
 
-> **Decision:** Make Customer Tier required on Account but NOT on Contact.
-> **Rationale:** Lisa: "It's not just nice-to-have." Tier drives routing, SLAs, and VIP logic — missing tier data would break downstream automation. Contact fields don't drive any confirmed business rules.
+### Custom Contact Fields
 
-> **Decision:** Skip custom Contact fields (Preferred Contact Method, Role/Department) for now.
-> **Rationale:** These were `📝 AI (Low)` suggestions not discussed in discovery. No confirmed business requirement depends on them. Can add later if needed.
+No custom Contact fields needed. Standard fields (Name, Email, Phone, Title) are sufficient per worksheet.
+
+### Duplicate Prevention
+
+**Org Analysis Findings:**
+
+| Rule | Current State | Gap | Action |
+|---|---|---|---|
+| Account duplicate rule | `Standard_Account_Duplicate_Rule` — Active (Alert mode, fuzzy name match) | Already provides Alert on name match | **No Gap** — standard rule meets requirement |
+| Contact duplicate rule | `Contact_Name_Email_Duplicate_Rule` — Active + `Standard_Contact_Duplicate_Rule` — Active | Worksheet says "Block" for contacts; standard rules use "Alert" | **Evaluate** — may need to update action to Block |
+
+> **Design Decision:** Keep standard duplicate rules as-is (Alert mode for both)
+> **Rationale:** Standard rules are already active and configured. The worksheet's "Block" suggestion is AI (Low) confidence. Recommend starting with Alert mode and upgrading to Block after the team has used the system and confirmed the matching is accurate. Blocking prematurely can frustrate agents trying to create legitimate records.
+
+**Org Analysis Findings:**
+
+| Item | Current State | Gap | Action |
+|---|---|---|---|
+| Customer_Tier__c on Account | No custom Account fields exist | Field needs to be created | Create |
+| Account standard fields | Standard fields exist | No gap | — |
+| Contact standard fields | Standard fields exist | No gap | — |
+| Account duplicate rule | Standard rule active (Alert on name) | Meets requirement | No Gap |
+| Contact duplicate rule | Standard + custom rules active (Alert on email+name) | Meets requirement (Alert vs Block — recommend Alert) | No Gap |
+| Account hierarchy | Not needed per worksheet | N/A | — |
 
 ## Feature Assumptions (What We're NOT Configuring)
 
 | Feature | Rationale |
-|---------|-----------|
-| Subscription Plan field on Account | Overlaps with future Stripe integration (parking lot). Not confirmed as needed now. |
-| Custom Contact fields | AI suggestion only — no confirmed business requirement |
-| Account Hierarchy (parent-child) | Not discussed; Relay Logic sells to mid-market ops teams, unlikely to need parent/subsidiary tracking |
-| Contacts to Multiple Accounts | ✅ Confirmed not needed |
-| Duplicate Management rules | `📝 AI (Low)` suggestion only — defer to a later story or post-launch |
+|---|---|
+| Account hierarchy (parent-child) | Worksheet: "Unlikely — not required" |
+| Contacts to Multiple Accounts | Worksheet: "No — standard single-account relationship sufficient" |
+| Custom Contact fields | Worksheet: "Standard fields sufficient" |
+| Custom duplicate matching rules | Standard rules already active and sufficient |
+| Account record types | Not discussed; single account type sufficient |
+| Contact record types | Not discussed; single contact type sufficient |
 
 ## Implementation Checklist
 
-**Deploy Custom Fields:**
-- [ ] Retrieve existing Account object metadata for XML reference
-- [ ] Create `Customer_Tier__c` picklist field (values: Silver, Gold, Platinum; required, default: none)
-- [ ] Create `Account_Start_Date__c` date field (not required)
-- [ ] Deploy both fields to org
+### Phase 1: Custom Field Creation
 
-**Secure & Make Usable:**
-- [ ] Deploy Permission Set `Account_Custom_Fields` with FLS: read/edit on both fields for all 3 profiles (Support Manager, Support Lead, Support Agent)
-- [ ] ❓ Confirm: Should Customer Tier be editable by agents, or restricted to leads/manager only? (Worksheet Section 13: *"📝 AI (Medium): Customer Tier field on Account — editable only by leads and Lisa"*). If restricted, create a second Permission Set for leads/manager with edit access, and agent Permission Set with read-only.
-- [ ] Assign Permission Set(s) to all 7 users
-- [ ] Add `Customer_Tier__c` and `Account_Start_Date__c` to Account page layout
+- [ ] Create `Customer_Tier__c` picklist field metadata: `force-app/main/default/objects/Account/fields/Customer_Tier__c.field-meta.xml` with values: Silver, Gold, Platinum
+- [ ] Deploy field: `sf project deploy start --source-dir force-app/main/default/objects/Account/fields/Customer_Tier__c.field-meta.xml`
+- [ ] Verify field exists: `SELECT Customer_Tier__c FROM Account LIMIT 1`
 
-**Verify:**
-- [ ] Query `SELECT Customer_Tier__c, Account_Start_Date__c FROM Account LIMIT 1` to confirm fields exist
-- [ ] Verify FLS via `FieldPermissions` SOQL query
-- [ ] Test: Create an Account — confirm Customer Tier is required and picklist shows 3 values (Silver, Gold, Platinum)
+### Phase 2: Field-Level Security (Required — new fields get zero FLS by default)
+
+- [ ] Create Permission Set `Account_Customer_Tier_Access` with FLS for `Account.Customer_Tier__c` (read + edit)
+- [ ] Deploy permission set: `sf project deploy start --source-dir force-app/main/default/permissionsets/Account_Customer_Tier_Access.permissionset-meta.xml`
+- [ ] Assign to all Relay Logic users: `sf org assign permset --name Account_Customer_Tier_Access`
+- [ ] Verify FLS: `SELECT Field, PermissionsRead, PermissionsEdit FROM FieldPermissions WHERE Field = 'Account.Customer_Tier__c'`
+
+### Phase 3: Page Layout — Add Field & Make Required
+
+- [ ] Retrieve Account page layout: `sf project retrieve start --metadata "Layout:Account-Account Layout"`
+- [ ] Add `Customer_Tier__c` to Account page layout in a prominent position (Details section)
+- [ ] Mark field as required on layout (`<required>true</required>` in layout item)
+- [ ] Deploy updated layout: `sf project deploy start --source-dir force-app/main/default/layouts/Account-Account*`
+- [ ] Verify layout assignment to Service_Cloud_Agent profile
+
+### Phase 4: Duplicate Rules — Verify Existing
+
+- [ ] Verify standard Account duplicate rule is active: `SELECT DeveloperName, IsActive FROM DuplicateRule WHERE SobjectType = 'Account'`
+- [ ] Verify standard Contact duplicate rules are active: `SELECT DeveloperName, IsActive FROM DuplicateRule WHERE SobjectType = 'Contact'`
+- [ ] Test Account duplicate detection: create two Accounts with same name → confirm Alert appears
+- [ ] Test Contact duplicate detection: create two Contacts with same email → confirm Alert appears
+
+### Secure & Make Usable
+
+- [ ] Verify Customer_Tier__c visible and editable for all Relay Logic users
+- [ ] Verify field appears on Account page layout as required
 - [ ] User verification with client
+
+---
+
+❓ **Open Questions:**
+1. **Contact duplicate action** — Standard rules use Alert mode. Should we upgrade to Block (prevents saving duplicate contacts), or is Alert (warns but allows save) acceptable to start?
